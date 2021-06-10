@@ -41,7 +41,7 @@ int main(){
         for(j=0; j<N; j++){
             tab[i][j] = "_";
             // scanf("%s", tab[i][j]);
-            printf("%d", tab[i][j]);
+            printf(" %s", tab[i][j]);
         }
         printf("|");
         printf("\n");
