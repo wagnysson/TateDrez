@@ -38,7 +38,7 @@ int main(){
     }
 
     //movimento do bispo
-
+    //TESTE 2
     //movimento da torre
     
     return(0);
