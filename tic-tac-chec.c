@@ -2,12 +2,13 @@
 // Bruno Dias -
 
 #include <stdio.h>
+#include <math.h>
 
 int main(){
     //declarando as varaveis
     char j1[20], j2[20]; // recebe o nome dos jogadores
     int pecasj1[3], pecasj2[3]; //recebe as pecas de cada jogador 
-    int tabuleiro[3][3];
+    int tab[3][3];
     int i; //contador
 
     //informacoes sobre o jogo
@@ -30,8 +31,15 @@ int main(){
     for (i=3; i<6; i++){
         pecasj2[i] = i;
     }
-	//teste
+	
+    //movimento do cavalo
+    if(tab[]){
 
+    }
+
+    //movimento do bispo
+
+    //movimento da torre
     
     return(0);
 }
