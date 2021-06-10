@@ -48,7 +48,7 @@ int main(){
         printf("\n");
     }
 	
-	//registro dos lances dos jogadores
+	//registro dos lances iniciais dos jogadores
 	for(i=0;i<6;i++){
 		
 		if(i%2==0){
