@@ -6,17 +6,41 @@
 
 #define N 3
 
+/*
+Valores da Tabela ASCII utilizados no programa
+B = 66
+C = 67
+T = 84
+b = 98
+c = 99
+t = 116
+_ = 95*/
+
 int main(){
     //declarando as varaveis
     char j1[20], j2[20]; // recebe o nome dos jogadores
-    char pecasj1[3], pecasj2[3]; //recebe as pecas de cada jogador 
     char tab[3][3];
     int i, j; //contador
     int p1, p2; //p1 - posiicao 1, p2 - posicao 2.
     char peca; // peca escolida
 
+    char printTab(){
+    int m, n;
+
+    for (m=0; m<N; m++){
+        printf("|");
+        for(n=0; n<N; n++){
+            printf("%3c", tab[m][n]);
+        }
+        printf("  |");
+        printf("\n");
+    }
+
+    return(0);
+}    
+
     //informacoes sobre o jogo
-    printf("Bem vindos ao Tic Tac Chec! ");
+    printf("Bem vindos ao Tic Tac Chec! O jogador 1 joga primeiro e joga com as pecas de letra maiuscula, o jogador 2 joga com as pecas de letra\n");
 
     //jogadores dão entrada em seus nomes
     printf("Jogador 1, digite como deseja ser chamado: ");
@@ -44,24 +68,29 @@ int main(){
             // scanf("%s", tab[i][j]);
             printf("%3c", tab[i][j]);
         }
-        printf("|");
+        printf("  |");
         printf("\n");
     }
 	
 	//registro dos lances iniciais dos jogadores
 	for(i=0;i<6;i++){
-        
+        printf("Rodada %d\n", i);
 		if(i%2==0){ //se a rodada for par o jogador 1 joga
 			do{
-            scanf("%d %d  %c", &p1, &p2, &peca);
-			tab[p1-1][p2-1] = peca;
-            }while((p1-1>0 && p1-1<=3) || (peca != B && peca != C && peca != T))
+                printf("Turno de %s\n", j1);
+                scanf("%d %d  %c", &p1, &p2, &peca);
+			    tab[p1-1][p2-1] = peca;
+            }while((p1-1<0 || p1-1>3) || (p2-1<0 || p2-1>3) || (peca != 'B' && peca != 'C' && peca != 'T'));
 		}
 		else{ //se a rodada for impar o jogador 2 joga
-			scanf("%d %d  %c", &p1, &p2, &peca);
-			tab[p1][p2] = peca;
+            
+            do{
+                printf("Turno de %s\n", j2);
+			    scanf("%d %d  %c", &p1, &p2, &peca);
+			    tab[p1-1][p2-1] = peca;
+            }while((p1-1<0 || p1-1>3) || (p2-1<0 || p2-1>3) || (peca != 'b' && peca != 'c' && peca != 't'));
 		}
-		
+        printTab();
 	}
 
     //movimento do cavalo
