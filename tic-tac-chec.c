@@ -10,8 +10,9 @@ int main(){
     //declarando as varaveis
     char j1[20], j2[20]; // recebe o nome dos jogadores
     int pecasj1[3], pecasj2[3]; //recebe as pecas de cada jogador 
-    int tab[3][3];
+    char tab[3][3];
     int i, j; //contador
+    int p1, p2; //p1 - posiicao 1, p2 - posicao 2.
 
     //informacoes sobre o jogo
     printf("Bem vindos ao Tic Tac Chec! ");
@@ -35,16 +36,31 @@ int main(){
     }
 	
     //mostrando o tabuleiro
-    do{
-        for (i=0; i<N; i++){
-            printf("|");
-            for(j=0; j<N; j++){
-                scanf("%s", tab[i][j]);
-            }
-            printf("|");
-            printf("\n");
+    for (i=0; i<N; i++){
+        printf("|");
+        for(j=0; j<N; j++){
+            tab[i][j] = "_";
+            // scanf("%s", tab[i][j]);
         }
-    }while(N=);
+        printf("|");
+        printf("\n");
+    }
+	
+	//registro dos lances dos jogadores
+	for(i=0;i<6;i++){
+		
+		if(i%2==0){
+			scanf("%d %d %d", &p1, &p2, &pecasj1[i/2]);
+			tab[p1][p2] = pecasj1[i/2];
+		}
+		else{
+			
+			scanf("%d %d %d", &p1, &p2, &pecasj2[(i-1)/2]);
+			tab[p1][p2] = pecasj2[(i-1)/2];
+			
+		}
+		
+	}
 
     //movimento do cavalo
 
