@@ -42,9 +42,9 @@ int main(){
                 scanf("%s", tab[i][j]);
             }
             printf("|");
-            printf("\n")
+            printf("\n");
         }
-    }
+    }while(N=);
 
     //movimento do cavalo
 
