@@ -9,7 +9,7 @@
 int main(){
     //declarando as varaveis
     char j1[20], j2[20]; // recebe o nome dos jogadores
-    // int pecasj1[3], pecasj2[3]; //recebe as pecas de cada jogador 
+    char pecasj1[3], pecasj2[3]; //recebe as pecas de cada jogador 
     char tab[3][3];
     int i, j; //contador
     int p1, p2; //p1 - posiicao 1, p2 - posicao 2.
@@ -28,13 +28,13 @@ int main(){
     // printf("Jogador 1: %s\n", j1);
     // printf("Jogador 2: %s\n", j2);
 
-    //pecas, 1 = cavalo branco, 2 = torre branca, 3 = bispo branco, 4 = cavalo preto, 5 = torre preta, 6 = bispo preto. 
-    for (i=0; i<3; i++){
-        pecasj1[i] = i;
-    }
-    for (i=3; i<6; i++){
-        pecasj2[i] = i;
-    }
+    //pecas, C = cavalo branco, T = torre branca, B = bispo branco, c = cavalo preto, t = torre preta, b = bispo preto. 
+    // for (i=0; i<3; i++){
+    //     pecasj1[i] = ;
+    // }
+    // for (i=3; i<6; i++){
+    //     pecasj2[i] = i;
+    // }
 	
     //mostrando o tabuleiro
     for (i=0; i<N; i++){
@@ -50,16 +50,16 @@ int main(){
 	
 	//registro dos lances iniciais dos jogadores
 	for(i=0;i<6;i++){
-		
-		if(i%2==0){
-			scanf("%d %d  %c", &p1, &p2, &peca;
-			tab[p1][p2] = peca;
+        
+		if(i%2==0){ //se a rodada for par o jogador 1 joga
+			do{
+            scanf("%d %d  %c", &p1, &p2, &peca);
+			tab[p1-1][p2-1] = peca;
+            }while((p1-1>0 && p1-1<=3) || (peca != B && peca != C && peca != T))
 		}
-		else{
-			
+		else{ //se a rodada for impar o jogador 2 joga
 			scanf("%d %d  %c", &p1, &p2, &peca);
 			tab[p1][p2] = peca;
-			
 		}
 		
 	}
