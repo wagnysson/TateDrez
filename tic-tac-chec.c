@@ -30,6 +30,7 @@ int main(){
     for (i=3; i<6; i++){
         pecasj2[i] = i;
     }
+	//teste
 
     
     return(0);
