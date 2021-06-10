@@ -52,13 +52,13 @@ int main(){
 	for(i=0;i<6;i++){
 		
 		if(i%2==0){
-			scanf("%d %d %d", &p1, &p2, &peca;
-			tab[p1][p2] = pecasj1[i/2];
+			scanf("%d %d  %c", &p1, &p2, &peca;
+			tab[p1][p2] = peca;
 		}
 		else{
 			
-			scanf("%d %d %d", &p1, &p2, &pecasj2[(i-1)/2]);
-			tab[p1][p2] = pecasj2[(i-1)/2];
+			scanf("%d %d  %c", &p1, &p2, &peca);
+			tab[p1][p2] = peca;
 			
 		}
 		
