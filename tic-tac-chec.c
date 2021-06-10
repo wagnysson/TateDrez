@@ -45,6 +45,39 @@ int main(){
             printf("\n")
         }
     }
+	
+	
+	
+	
+	
+	
+	
+	
+	//registro dos lances dos jogadores
+	for(i=0;i<6;i++){
+		
+		if(i%2==0){
+			scanf("%d %d %d", &p1, &p2, &pecasj1[i/2]);
+			tab[p1][p2] = pecasj1[i/2];
+		}
+		else{
+			
+			scanf("%d %d %d", &p1, &p2, &pecasj2[(i-1)/2]);
+			tab[p1][p2] = pecasj2[(i-1)/2];
+			
+		}
+		
+	}
+	
+	for(i=0;i<3;i++){
+		for(j=0;j<3;j++){
+			
+			printf("%d ", tab[i][j]);
+			
+		}
+		printf("\n")
+		
+	}
 
     //movimento do cavalo
 
