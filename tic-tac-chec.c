@@ -1,10 +1,26 @@
 // Wagnysson Moura Luz - 12558471
-// Bruno Dias -
+// Bruno Dias Moreira - 12624905
 
 #include <stdio.h>
 #include <math.h>
 
 #define N 3
+
+//funcao que escreve o tabuleiro
+char printTab(char tab[3][3]){
+    int m, n;
+
+    for (m=0; m<N; m++){
+        printf("|");
+        for(n=0; n<N; n++){
+            printf("%3c", tab[m][n]);
+        }
+        printf("  |");
+        printf("\n");
+    }
+
+    return(0);
+}    
 
 /*
 Valores da Tabela ASCII utilizados no programa
@@ -24,20 +40,7 @@ int main(){
     int p1, p2; //p1 - posiicao 1, p2 - posicao 2.
     char peca; // peca escolida
 
-    char printTab(){
-    int m, n;
-
-    for (m=0; m<N; m++){
-        printf("|");
-        for(n=0; n<N; n++){
-            printf("%3c", tab[m][n]);
-        }
-        printf("  |");
-        printf("\n");
-    }
-
-    return(0);
-}    
+    
 
     //informacoes sobre o jogo
     printf("Bem vindos ao Tic Tac Chec! O jogador 1 joga primeiro e joga com as pecas de letra maiuscula, o jogador 2 joga com as pecas de letra\n");
@@ -62,15 +65,11 @@ int main(){
 	
     //mostrando o tabuleiro
     for (i=0; i<N; i++){
-        printf("|");
         for(j=0; j<N; j++){
             tab[i][j] = '_';
-            // scanf("%s", tab[i][j]);
-            printf("%3c", tab[i][j]);
-        }
-        printf("  |");
-        printf("\n");
+	}
     }
+	    printTab(tab);
 	
 	//registro dos lances iniciais dos jogadores
 	for(i=0;i<6;i++){
@@ -90,7 +89,7 @@ int main(){
 			    tab[p1-1][p2-1] = peca;
             }while((p1-1<0 || p1-1>3) || (p2-1<0 || p2-1>3) || (peca != 'b' && peca != 'c' && peca != 't'));
 		}
-        printTab();
+        printTab(tab);
 	}
 
     //movimento do cavalo
