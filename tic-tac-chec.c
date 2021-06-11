@@ -6,6 +6,147 @@
 
 #define N 3
 
+
+//checa se um lance eh valido
+int checarlance(int p1, int p2, char peca, char tab[3][3]){
+	int i, j;
+	int flag;
+	flag = 0;
+	
+		switch(peca){
+			case 'b':
+				for(i=0;i<3;i++){
+					for(j=0;j<3;j++){
+						if(tab[i][j] == peca){
+							
+						}
+					}	
+					
+				}
+				break;
+			case 'c':
+				for(i=0;i<3;i++){
+					for(j=0;j<3;j++){
+						if(tab[i][j] == peca){
+							if((sqrt(5)-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && ((sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < sqrt(5)+0.1))){
+								flag = 0;
+							}
+							else{
+								flag = 1;
+							}
+						}
+					}	
+					
+				}
+		
+				break;
+			case 't':
+				for(i=0;i<3;i++){
+					for(j=0;j<3;j++){
+						if(tab[i][j] == peca){
+							tab[i][j] = '_';
+						}
+					}	
+					
+				}
+				break;
+				
+			case 'B':
+				for(i=0;i<3;i++){
+					for(j=0;j<3;j++){
+						if(tab[i][j] == peca){
+							tab[i][j] = '_';
+						}
+					}	
+					
+				}
+				break;
+				
+			case 'C':
+				for(i=0;i<3;i++){
+					for(j=0;j<3;j++){
+						if(tab[i][j] == peca){
+							if((sqrt(5)-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && ((sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < sqrt(5)+0.1))){
+								flag = 0;
+							}
+							else{
+								flag = 1;
+							}
+							
+						}
+					}	
+					
+				}
+				break;
+				
+			case 'T':
+				for(i=0;i<3;i++){
+					for(j=0;j<3;j++){
+						if(tab[i][j] == peca){
+							tab[i][j] = '_';
+						}
+					}	
+					
+				}
+				break;
+			default:
+				printf("Peca nao existe");	
+		
+		}
+	
+	return(flag);
+	
+	
+}
+
+// confere se alguem venceu
+int vencedor(char tab[3][3]){
+	int i,j;
+	int flag;
+	flag=0;
+	for(i=0;i<3;i++){
+		if((tab[i][0]<85) && (tab[i][1]<85) && (tab[i][2]<85)){
+			flag=1;
+		}
+		else{
+			if((tab[i][0]>95) && (tab[i][1]>95) && (tab[i][2]>95)){
+				flag = -1;
+			}
+		}
+		
+	}
+	
+	for(i=0;i<3;i++){
+		if((tab[0][i]<85) && (tab[1][i]<85) && (tab[2][i])<85){
+			flag=1;
+		}
+		else{
+			if(tab[0][i]>95 && tab[1][i]>95 && tab[2][i]>95){
+				flag = -1;
+			}
+		}
+		
+	}
+	if((tab[1][1]<85) && (tab[2][2]<85) && (tab[3][3]<85)){
+		flag = 1;
+	}
+	else{
+		if(tab[1][1]>95 && tab[2][2]>95 && tab[3][3]>95){
+			flag  = -1;
+		}
+	}
+	
+	if(tab[1][3]<85 && tab[2][2]<85 && tab[3][1]<85){
+		flag = 1;
+	}
+	else{
+		if(tab[1][3]>95 && tab[2][2]>95 && tab[3][1]>95){
+			flag  = -1;
+		}
+	}
+	return(flag);
+}
+
 //funcao que escreve o tabuleiro
 char printTab(char tab[3][3]){
     int m, n;
@@ -20,7 +161,82 @@ char printTab(char tab[3][3]){
     }
 
     return(0);
-}    
+}  
+ //funcao que checa se uma peca ja esta no tabuleiro
+char checar(char peca, char tab[3][3]){
+	int i, j;
+	char flag;
+	flag='0';
+	switch(peca){
+		case 'b':
+			for(i=0;i<3;i++){
+				for(j=0;j<3;j++){
+					if(tab[i][j] == peca){
+						flag='1';
+					}
+				}	
+				
+			}
+			break;
+		case 'c':
+			for(i=0;i<3;i++){
+				for(j=0;j<3;j++){
+					if(tab[i][j] == peca){
+						flag='1';
+					}
+				}	
+				
+			}
+	
+			break;
+		case 't':
+			for(i=0;i<3;i++){
+				for(j=0;j<3;j++){
+					if(tab[i][j] == peca){
+						flag='1';
+					}
+				}	
+				
+			}
+			break;
+			
+		case 'B':
+			for(i=0;i<3;i++){
+				for(j=0;j<3;j++){
+					if(tab[i][j] == peca){
+						flag='1';
+					}
+				}	
+				
+			}
+			break;
+			
+		case 'C':
+			for(i=0;i<3;i++){
+				for(j=0;j<3;j++){
+					if(tab[i][j] == peca){
+						flag='1';
+					}
+				}	
+				
+			}
+			break;
+			
+		case 'T':
+			for(i=0;i<3;i++){
+				for(j=0;j<3;j++){
+					if(tab[i][j] == peca){
+						flag='1';
+					}
+				}	
+				
+			}
+			break;
+		default:
+			printf("Peca nao existe");	
+	}
+	return(flag);
+}	
 
 /*
 Valores da Tabela ASCII utilizados no programa
@@ -37,8 +253,86 @@ int main(){
     char j1[20], j2[20]; // recebe o nome dos jogadores
     char tab[3][3];
     int i, j; //contador
+	int f;
     int p1, p2; //p1 - posiicao 1, p2 - posicao 2.
     char peca; // peca escolida
+	
+	//funcao que realiza um lance na segunda parte do jogo
+	char lance(){
+		int i, j;
+	
+		switch(peca){
+			case 'b':
+				for(i=0;i<3;i++){
+					for(j=0;j<3;j++){
+						if(tab[i][j] == peca){
+							tab[i][j] = '_';
+						}
+					}	
+					
+				}
+				break;
+			case 'c':
+				for(i=0;i<3;i++){
+					for(j=0;j<3;j++){
+						if(tab[i][j] == peca){
+							tab[i][j] = '_';
+						}
+					}	
+					
+				}
+		
+				break;
+			case 't':
+				for(i=0;i<3;i++){
+					for(j=0;j<3;j++){
+						if(tab[i][j] == peca){
+							tab[i][j] = '_';
+						}
+					}	
+					
+				}
+				break;
+				
+			case 'B':
+				for(i=0;i<3;i++){
+					for(j=0;j<3;j++){
+						if(tab[i][j] == peca){
+							tab[i][j] = '_';
+						}
+					}	
+					
+				}
+				break;
+				
+			case 'C':
+				for(i=0;i<3;i++){
+					for(j=0;j<3;j++){
+						if(tab[i][j] == peca){
+							tab[i][j] = '_';
+						}
+					}	
+					
+				}
+				break;
+				
+			case 'T':
+				for(i=0;i<3;i++){
+					for(j=0;j<3;j++){
+						if(tab[i][j] == peca){
+							tab[i][j] = '_';
+						}
+					}	
+					
+				}
+				break;
+			default:
+				printf("Peca nao existe");	
+		
+		}
+		tab[p1-1][p2-1]=peca;
+		return(0);
+}
 
     
 
@@ -73,25 +367,112 @@ int main(){
 	
 	//registro dos lances iniciais dos jogadores
 	for(i=0;i<6;i++){
-        printf("Rodada %d\n", i);
+		if(i%2==0){
+			printf("Rodada %d\n", i/2);
+		}
 		if(i%2==0){ //se a rodada for par o jogador 1 joga
 			do{
                 printf("Turno de %s\n", j1);
                 scanf("%d %d  %c", &p1, &p2, &peca);
-			    tab[p1-1][p2-1] = peca;
-            }while((p1-1<0 || p1-1>3) || (p2-1<0 || p2-1>3) || (peca != 'B' && peca != 'C' && peca != 'T'));
+				
+				if(peca != 'B' && peca != 'C' && peca != 'T'){
+					printf("Essa peca nao existe. Digite outra:\n");
+				}
+				
+				else{
+					if(tab[p1-1][p2-1] != '_'){
+						printf("Essa casa ja esta ocupada. Digite outra:\n");
+					}
+				}				
+            }while((p1-1<0 || p1-1>3) || (p2-1<0 || p2-1>3) || (peca != 'B' && peca != 'C' && peca != 'T')||(checar(peca, tab)== '1')|| (tab[p1-1][p2-1] != '_'));
+			tab[p1-1][p2-1] = peca;
+			if(vencedor(tab) == 1){
+				printf("%s vence!\n", j1);
+				i=7;
+			}
 		}
 		else{ //se a rodada for impar o jogador 2 joga
             
             do{
                 printf("Turno de %s\n", j2);
 			    scanf("%d %d  %c", &p1, &p2, &peca);
-			    tab[p1-1][p2-1] = peca;
-            }while((p1-1<0 || p1-1>3) || (p2-1<0 || p2-1>3) || (peca != 'b' && peca != 'c' && peca != 't'));
+				
+				if(peca != 'b' && peca != 'c' && peca != 't'){
+					printf("Essa peca nao existe. Digite outra:\n");
+				}
+				else{
+					if(tab[p1-1][p2-1] != '_'){
+						printf("Essa casa ja esta ocupada. Digite outra:\n");
+					}
+				}
+            }while((p1-1<0 || p1-1>3) || (p2-1<0 || p2-1>3) || (peca != 'b' && peca != 'c' && peca != 't')||(checar(peca, tab)== '1')||(tab[p1-1][p2-1] != '_'));
+			tab[p1-1][p2-1] = peca;
+			if(vencedor(tab) == -1){
+				printf("%s vence!\n", j2);
+				i=7;
+			}
 		}
         printTab(tab);
 	}
-
+	
+	if(i != 8){
+		printf("Fase de posicionamento acabou. Comeca fase de mover pecas\n");
+		
+		for(i=0; i<31; i++){
+			if(i%2==0){
+				printf("Rodada %d\n", i/2);
+			}
+			if(i%2==0){ //se a rodada for par o jogador 1 joga
+				do{
+					printf("Turno de %s\n", j1);
+					scanf("%d %d  %c", &p1, &p2, &peca);
+					
+					if(peca != 'B' && peca != 'C' && peca != 'T'){
+						printf("Essa peca nao existe. Digite outra:\n");
+					}
+					
+					else{
+						if(tab[p1-1][p2-1] != '_'){
+							printf("Essa casa ja esta ocupada. Digite outra:\n");
+						}
+					}				
+				}while((p1-1<0 || p1-1>3) || (p2-1<0 || p2-1>3) || (peca != 'B' && peca != 'C' && peca != 'T')||(tab[p1-1][p2-1] != '_')||(checarlance(p1, p2, peca, tab)==1));
+				lance();
+				if(vencedor(tab) == 1){
+					printf("%s vence!\n", j1);
+					i=31;
+				}
+			}
+			else{ //se a rodada for impar o jogador 2 joga
+				
+				do{
+					printf("Turno de %s\n", j2);
+					scanf("%d %d  %c", &p1, &p2, &peca);
+					
+					if(peca != 'b' && peca != 'c' && peca != 't'){
+						printf("Essa peca nao existe. Digite outra:\n");
+					}
+					else{
+						if(tab[p1-1][p2-1] != '_'){
+							printf("Essa casa ja esta ocupada. Digite outra:\n");
+						}
+					}
+				}while((p1-1<0 || p1-1>3) || (p2-1<0 || p2-1>3) || (peca != 'b' && peca != 'c' && peca != 't')||(tab[p1-1][p2-1] != '_')||(checarlance(p1, p2, peca, tab)==1));
+				lance();
+				if(vencedor(tab) == -1){
+					printf("%s vence!\n", j2);
+					i=31;
+				}
+			}
+			printTab(tab);
+		
+		}
+	}
+	
+	
+	
+	
+	
     //movimento do cavalo
 
     //movimento do bispo
