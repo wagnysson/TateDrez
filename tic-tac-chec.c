@@ -63,7 +63,7 @@ int main(){
     //     pecasj2[i] = i;
     // }
 	
-    //mostrando o tabuleiro
+    //colocando casas "vazias" no tabuleiro
     for (i=0; i<N; i++){
         for(j=0; j<N; j++){
             tab[i][j] = '_';
