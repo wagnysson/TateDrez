@@ -20,12 +20,10 @@ int checarlance(int p1, int p2, char peca, char tab[N][N]){
                 for(j=0;j<3;j++){
                     if(tab[i][j] == peca){
                         if(i != p1-1 && j != p2-1){
-							if((sqrt(18)-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && (sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < sqrt(18)+0.1)){
-								if(tab[1][1] == '_'){
-									flag = 0;
-								}
-							}else{
+							if(tab[1][1] == '_' && tab[p1-1][p2-1] == '_'){
 								flag = 0;
+							}else{
+								flag = 1;
 							}
 						}else{
 							flag = 1;
@@ -39,7 +37,7 @@ int checarlance(int p1, int p2, char peca, char tab[N][N]){
             for(i=0;i<3;i++){
                 for(j=0;j<3;j++){
                     if(tab[i][j] == peca){
-                        if((sqrt(5)-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && (sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < sqrt(5)+0.1)){
+                        if((sqrt(5)-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && (sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < sqrt(5)+0.1) && tab[p1-1][p2-1] == '_'){
                             flag = 0;
                         }
                         else{
@@ -57,7 +55,7 @@ int checarlance(int p1, int p2, char peca, char tab[N][N]){
                         if((i != p1-1 && j != p2-1) || (i == p1-1 && j == p2-1)){
 							flag = 1;
 						}else{
-							if((2-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && (sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < 2+0.1)){
+							if((2-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && (sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < 2+0.1) && (tab[p1-1][p2-1] == '_')){
 								if(p1-1 == i){
 									if(tab[i][1] != '_'){
 										flag = 1;
@@ -70,7 +68,11 @@ int checarlance(int p1, int p2, char peca, char tab[N][N]){
 									}
 								}
 							}else{
-								flag = 0;
+								if(tab[p1-1][p2-1] == '_'){
+									flag = 0;
+								}else{
+									flag = 1;
+								}
 							}
 						}
 					}
@@ -82,25 +84,25 @@ int checarlance(int p1, int p2, char peca, char tab[N][N]){
             for(i=0;i<3;i++){
                 for(j=0;j<3;j++){
                     if(tab[i][j] == peca){
-                        if((sqrt(18)-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && (sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < sqrt(18)+0.1)){
-								if(tab[1][1] == '_'){
-									flag = 0;
-								}
-							}else{
+                        if(i != p1-1 && j != p2-1){
+							if(tab[1][1] == '_' && tab[p1-1][p2-1] == '_'){
 								flag = 0;
+							}else{
+								flag = 1;
 							}
 						}else{
 							flag = 1;
 						}
                     }
                 }	
+            }
             break;
             
         case 'C':
             for(i=0;i<3;i++){
                 for(j=0;j<3;j++){
                     if(tab[i][j] == peca){
-                        if((sqrt(5)-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && ((sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < sqrt(5)+0.1))){
+                        if((sqrt(5)-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && ((sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < sqrt(5)+0.1)) && tab[p1-1][p2-1] == '_'){
                             flag = 0;
                         }
                         else{
@@ -118,7 +120,7 @@ int checarlance(int p1, int p2, char peca, char tab[N][N]){
                         if((i != p1-1 && j != p2-1) || (i == p1-1 && j == p2-1)){
 							flag = 1;
 						}else{
-							if((2-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && (sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < 2+0.1)){
+							if((2-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && (sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < 2+0.1) && (tab[p1-1][p2-1] == '_')){
 								if(p1-1 == i){
 									if(tab[i][1] != '_'){
 										flag = 1;
@@ -131,7 +133,11 @@ int checarlance(int p1, int p2, char peca, char tab[N][N]){
 									}
 								}
 							}else{
-								flag = 0;
+								if(tab[p1-1][p2-1] == '_'){
+									flag = 0;
+								}else{
+									flag = 1;
+								}
 							}
 						}
 					}
@@ -352,6 +358,29 @@ char lance(int p1, int p2, char peca, char tab[N][N]){
 		return(0);
     }
 
+int empate1(char tab[N][N]){
+	int i, j, flag = 0;
+	for(i=0; i<N; i++){
+		for(j=0; j<N; j++){
+			if(checarlance(i+1, j+1, 'B', tab) == 1 && checarlance(i+1, j+1, 'C', tab) == 1 && checarlance(i+1, j+1, 'T', tab) == 1){
+				flag = flag + 1;
+			}
+		}
+	}
+	return(flag);
+}
+
+int empate2(char tab[N][N]){
+	int i, j, flag = 0;
+	for(i=0; i<N; i++){
+		for(j=0; j<N; j++){
+			if(checarlance(i+1, j+1, 'b', tab) == 1 && checarlance(i+1, j+1, 'c', tab) == 1 && checarlance(i+1, j+1, 't', tab) == 1){
+				flag = flag + 1;
+			}
+		}
+	}
+	return(flag);
+}
 
 /*
 Valores da Tabela ASCII utilizados no programa
@@ -458,49 +487,57 @@ int main(){
 		printf("Fase de posicionamento acabou. Comeca fase de mover pecas\n");
 		
 		for(i=0; i<31; i++){
-			if(i%2==0){
-				printf("Rodada %d\n", i/2);
-			}
 			if(i%2==0){ //se a rodada for par o jogador 1 joga
-				do{
-					printf("Turno de %s\n", j1);
-					scanf("%d %d  %c", &p1, &p2, &peca);
-					
-					if(peca != 'B' && peca != 'C' && peca != 'T'){
-						printf("Essa peca nao existe. Digite outra:\n");
-					}
-					
-					else{
-						if(tab[p1-1][p2-1] != '_'){
-							printf("Essa casa ja esta ocupada. Digite outra:\n");
+				printf("Rodada %d\n", i/2);
+				printf("%d", empate1(tab));
+				if(empate1(tab)!=9){
+					do{
+						printf("Turno de %s\n", j1);
+						scanf("%d %d  %c", &p1, &p2, &peca);
+						
+						if(peca != 'B' && peca != 'C' && peca != 'T'){
+							printf("Essa peca nao existe. Digite outra:\n");
 						}
-					}				
-				}while((p1-1<0 || p1-1>3) || (p2-1<0 || p2-1>3) || (peca != 'B' && peca != 'C' && peca != 'T')||(tab[p1-1][p2-1] != '_')||(checarlance(p1, p2, peca, tab)==1));
-				lance(p1, p2, peca, tab);
-				if(vencedor(tab) == 1){
-					printf("%s vence!\n", j1);
-					i=31;
+						
+						else{
+							if(tab[p1-1][p2-1] != '_'){
+								printf("Essa casa ja esta ocupada. Digite outra:\n");
+							}
+						}				
+					}while((p1-1<0 || p1-1>3) || (p2-1<0 || p2-1>3) || (peca != 'B' && peca != 'C' && peca != 'T')||(checarlance(p1, p2, peca, tab)==1));
+					lance(p1, p2, peca, tab);
+					if(vencedor(tab) == 1){
+						printf("%s vence!\n", j1);
+						i=31;
+					}
+				}else{
+					printf("EMPATE!\n");
+					i = 40;
 				}
 			}
 			else{ //se a rodada for impar o jogador 2 joga
-				
-				do{
-					printf("Turno de %s\n", j2);
-					scanf("%d %d  %c", &p1, &p2, &peca);
-					
-					if(peca != 'b' && peca != 'c' && peca != 't'){
-						printf("Essa peca nao existe. Digite outra:\n");
-					}
-					else{
-						if(tab[p1-1][p2-1] != '_'){
-							printf("Essa casa ja esta ocupada. Digite outra:\n");
+				if(empate2(tab) !=9){
+					do{
+						printf("Turno de %s\n", j2);
+						scanf("%d %d  %c", &p1, &p2, &peca);
+						
+						if(peca != 'b' && peca != 'c' && peca != 't'){
+							printf("Essa peca nao existe. Digite outra:\n");
 						}
+						else{
+							if(tab[p1-1][p2-1] != '_'){
+								printf("Essa casa ja esta ocupada. Digite outra:\n");
+							}
+						}
+					}while((p1-1<0 || p1-1>3) || (p2-1<0 || p2-1>3) || (peca != 'b' && peca != 'c' && peca != 't')||(tab[p1-1][p2-1] != '_')||(checarlance(p1, p2, peca, tab)==1));
+					lance(p1, p2, peca, tab);
+					if(vencedor(tab) == -1){
+						printf("%s vence!\n", j2);
+						i=31;
 					}
-				}while((p1-1<0 || p1-1>3) || (p2-1<0 || p2-1>3) || (peca != 'b' && peca != 'c' && peca != 't')||(tab[p1-1][p2-1] != '_')||(checarlance(p1, p2, peca, tab)==1));
-				lance(p1, p2, peca, tab);
-				if(vencedor(tab) == -1){
-					printf("%s vence!\n", j2);
-					i=31;
+				}else{
+					printf("EMPATE!\n");
+					i = 40;
 				}
 			}
 			printTab(tab);
