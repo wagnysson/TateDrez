@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 
 //ordem da matriz (3 linhas e 3 colunas, no caso)
 #define N 3
@@ -245,20 +246,20 @@ int vencedor(char tab[3][3]){
 			}
 		}	
 	}
-	if((tab[1][1]<85) && (tab[2][2]<85) && (tab[3][3]<85)){
+	if((tab[0][0]<85) && (tab[1][1]<85) && (tab[2][2]<85)){
 		flag = 1;
 	}
 	else{
-		if(tab[1][1]>95 && tab[2][2]>95 && tab[3][3]>95){
+		if(tab[0][0]>95 && tab[1][1]>95 && tab[2][2]>95){
 			flag  = -1;
 		}
 	}
 	
-	if(tab[1][3]<85 && tab[2][2]<85 && tab[3][1]<85){
+	if(tab[0][2]<85 && tab[1][1]<85 && tab[2][0]<85){
 		flag = 1;
 	}
 	else{
-		if(tab[1][3]>95 && tab[2][2]>95 && tab[3][1]>95){
+		if(tab[0][2]>95 && tab[1][1]>95 && tab[2][0]>95){
 			flag  = -1;
 		}
 	}
