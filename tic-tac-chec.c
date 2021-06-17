@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 //ordem da matriz (3 linhas e 3 colunas, no caso)
 #define N 3
@@ -14,13 +15,14 @@ void info(void){
 	printf("Bem vindos ao TateDrez!\n\n");
 	printf("COMO JOGAR?\nO jogo pode ser dividido em 2 fases, a FASE DE POSICIONAMENTO e a FASE DE JOGO nas quais os jogadores realizam LANCES.\n\n");
 	printf("LANCE - Para fazer um lance o jogador da vez digita um comando no formato 'p1 p2 peca', onde p1 eh o numero da linha e p2 o da coluna do tabuleiro (para) onde o jogador deseja posicionar/movimentar a peca que eh definida pelo terceiro item do comando (peca).\n");
+	printf("RESTRICAO DOS VALORES\n1<=p1<=3\n1<=p2<=3\n");
 	printf("O jogador 1 joga apenas com as pecas de letra maiuscula e o jogador 2 joga apenas com as pecas de letra minuscula sendo elas:\n");
 	printf("C, c - CAVALO\nB, b - BISPO\nT, t - TORRE\n\n");
 	printf("FASE DE POSICIONAMENTO - Os jogadores fazem lances de posicionamento alternados começando pelo jogador 1. Eles podem colocar suas pecas em qualquer casa do tabuleiro que esteja vazia.\n\n");
 	printf("FASE DE JOGO - Depois que todas as pecas estiverem posicionadas comeca a fase de jogo. Em cada rodada ha o turno do jogador 1 e o turno do jogador 2 e em cada um deles o jogador da vez movimenta uma de suas pecas. O OBJETIVO eh alinhar suas tres pecas como no jogo da velha (na diagonal, em linha ou em coluna), porem suas pecas se movimentam como no xadrez, ou seja, o CAVALO anda em L (uma casa na vertical ou na horizontal e outra na diagonal) e pode 'saltar' pecas que estejam no seu caminho, o BISPO anda apenas na diagonal quantas casas quiser sem poder 'saltar' pecas que estejam no seu caminho e a TORRE anda apenas na vertical ou na horizontal quantaas casas quiser sem poder 'saltar' pecas que estejam no seu caminho tambem.\n\n");
     printf("QUEM VENCE?\nO jogador que conseguir alinhas suas tres pecas em uma linha, coluna ou na diagonal primeiro vence.\n\n");
-	printf("QUANDO DAH EMPATE?\nO empate ocorre quando nao ha movimentos possiveis para nenhuma peca de um jogador OU se depois de 30 rodadas (contando as rodadas de posicionamento, entao seria depois da 27a rodada de jogo) nenhum dos jogadores venceu.\n\n\n");
-	
+	printf("QUANDO DAH EMPATE?\nO empate ocorre quando nao ha movimentos possiveis para nenhuma peca de um jogador OU se depois de 30 rodadas (contando as rodadas de posicionamento, entao seria depois da 27a rodada de jogo) nenhum dos jogadores venceu.\n\n");
+	printf("Para SAIR DO JOGO tecle ctrl+C\n\n\n");
 	return;
 }
 
@@ -49,35 +51,7 @@ char printTab(char tab[3][3]){
     return(0);
 }  
 
-//funcao que testa a posicao e a peca digitada pelo jogador e mostra mensagens de erro caso 
-void erros(int i, int p1, int p2, char peca, char tab[N][N]){
-	if((p1<1 || p1>3) || (p2<1 || p2>3)){
-		printf("A casa que voce digitou nao existe. Faca outra jogada:\n");
-	}
-	if(i%2==0){
-
-		if(peca != 'B' && peca != 'C' && peca != 'T'){
-			printf("Essa peca nao existe ou nao eh sua. Faca outra jogada:\n");
-		}
-		else{
-			if(tab[p1-1][p2-1] != '_'){
-				printf("Essa casa ja esta ocupada. Faca outra jogada:\n");
-			}
-		}
-	}else{
-		if(peca != 'b' && peca != 'c' && peca != 't'){
-			printf("Essa peca nao existe ou nao eh sua. Faca outra jogada:\n");
-		}
-		else{
-			if(tab[p1-1][p2-1] != '_'){
-				printf("Essa casa ja esta ocupada. Faca outra jogada:\n");
-			}
-		}
-	}
-	return;
-}
-
- //funcao que checa se uma peca ja esta no tabuleiro
+ //funcao que checa se uma peca ja esta no tabuleiro. flag = '1' a peca ja esta no tabuleiro, flag = '0' a peca ainda nao esta no tabuleiro
 char checar(char peca, char tab[N][N]){
 	int i, j;
 	char flag = '0';
@@ -138,10 +112,41 @@ char checar(char peca, char tab[N][N]){
 			}
 			break;
 		default:
-			printf("Peca nao existe");	
+			printf("Peca nao existe\n");	
 	}
 	return(flag);
 }	
+
+//funcao que testa a posicao e a peca digitada pelo jogador e mostra mensagens de erro caso 
+void erros(int vez, int p1, int p2, char peca, char tab[N][N]){
+	int erro = 0;
+	if((p1<1 || p1>3) || (p2<1 || p2>3)){
+		printf("A casa que voce digitou nao existe. Faca outra jogada:\n");
+	}else{
+		if(vez == 1){
+			if((peca == 'b') || (peca == 'c') || (peca == 't')){
+				printf("Essa peca nao eh sua. Faca outra jogada:\n");
+				erro = 1;
+			}
+		}else{
+			if((peca == 'B') || (peca == 'C') || (peca == 'T')){
+				printf("Essa peca nao eh sua. Faca outra jogada:\n");
+				erro = 1;
+			}
+		}
+		if((checar(peca, tab) == '1') && (erro != 1)){
+			printf("Esta peca ja estah no tabuleiro. Faca outra jogada:\n");
+		}else{
+			if((p1>=1 && p1<=3) && (p2>=1 && p2<=3) && (erro != 1)){
+				if(tab[p1-1][p2-1] != '_'){
+					printf("Essa casa ja esta ocupada. Faca outra jogada:\n");
+				}
+			}
+		}
+	}
+	
+	return;
+}
 
 // confere se alguem venceu
 int vencedor(char tab[3][3]){
@@ -356,7 +361,6 @@ int checarlance(int p1, int p2, char peca, char tab[N][N]){
     return(flag);	
 }
 
-
 //funcao que realiza um lance na segunda parte do jogo
 char lance(int p1, int p2, char peca, char tab[N][N]){
 		int i, j;
@@ -466,15 +470,18 @@ int main(void){
     int i, j; //contadores
     int p1, p2; //p1 - linha do tabuleiro, p2 - coluna do tabuleiro.
     char peca; // peca escolhida para mover
+	int vez = 0; //indica de quem eh a vez de jogar, se vez = 1 entao eh a vez do jogador 1, se v = 2 eh a vez do jogador 2
 	
 	info();
-
+	
 	printf("FASE DE POSICIONAMENTO COMECOU!\n\n");
     //jogadores dão entrada em seus nomes
-    printf("Jogador 1, digite como deseja ser chamado: ");
-    scanf("%s", j1);
-    printf("Jogador 2, digite como deseja ser chamado: ");
-    scanf("%s", j2);
+	printf("Jogador 1, digite como deseja ser chamado: ");
+	scanf("%s", j1);
+	do{
+		printf("Jogador 2, digite como deseja ser chamado: ");
+		scanf("%s", j2);
+	}while(strcmp(j1, j2) == 0);
 
     //colocando casas vazias no tabuleiro que sao representadas por '_'
     for (i=0; i<N; i++){
@@ -483,19 +490,23 @@ int main(void){
 		}
     }
 	
-	printTab(tab);
-	
+	//neste programa o usuario da entrada nas posicoes das pecas de 1 a 3 para que seja mais intuitivo para ele, mas na hora de utilizar estas entradas nas matrizes do programa nos subtraimos 1 para que os valores sejam colocados nos lugares corretos
 	//FASE DE POSICIONAMENTO
+	//essa repeticao vai do 1 ao 6 para que ocorram 3 rodadas de posicionamento ja que as rodadas iniciam quando eh a vez de o jogador 1 fazer o lance, no caso, quando i eh par
 	for(i=0; i<6; i++){
-		if(i%2==0){ //se a rodada for par o jogador 1 joga
+		if(i%2 == 0){
 			//printa a rodada atual
-			printf("\nRodada %d\n", i/2);
+			printf("\nRodada %d\n", (i/2)+1);
+			printf("Turno de %s\n", j1);
+			printTab(tab);
+			vez = 1;
+			//o jogador fica preso no looping do/while ateh que ele faca um lance valido
 			do{
-                printf("Turno de %s\n", j1);
+				printf("Faca um lance:\n");
 				//le o lance de posicionamento do jogador 1
                 scanf("%d %d  %c", &p1, &p2, &peca);
 
-				erros(i, p1, p2, peca, tab);
+				erros(vez, p1, p2, peca, tab);
 			/*nesse while eh checado se: 
 			a casa digitada nao existe, ou seja, se esta fora da faixa de 1 a 3 (que depois eh convertida para 0 a 2 para trabalhar com as matrizes);
 			se a peca nao existe ou nao eh do jogador da vez;
@@ -503,44 +514,56 @@ int main(void){
 			se a peca digitada ja esta no tabuleiro;
 			respectivamente e analogo para os outros whiles, se uma dessas condicoes for verdadeira o lance eh invalido e o jogador da vez deve fazer outro lance*/
             }while((p1<1 || p1>3) || (p2<1 || p2>3) || (peca != 'B' && peca != 'C' && peca != 'T') || (tab[p1-1][p2-1] != '_') || (checar(peca, tab) == '1'));
+			//depois de o jogador fazer um lance valido a peca eh colocada no tabuleiro na posicao escolhida
 			tab[p1-1][p2-1] = peca;
+			printTab(tab);
+			//verifica se o jogador 1 eh o vencedor, se for printa que ele venceu e i recebe 7 para sair do looping da fase de posicionamento
 			if(vencedor(tab) == 1){
+				printTab(tab);
 				printf("%s vence!\n", j1);
 				i=7;
-			}
-			else{ //se a rodada for impar o jogador 2 joga
+			}//se o jogador 1 nao venceu entao eh o turno do jogador 2 e o codigo abaixo eh executado. Eh analogo ao trecho de cima mas para o jogador 2
+			else{
+				printf("Turno de %s\n", j2);
+				vez = 2;
 				do{
-					printf("Turno de %s\n", j2);
+					printf("Faca um lance:\n");
 					scanf("%d %d  %c", &p1, &p2, &peca);
 					
-					erros(i, p1, p2, peca, tab);
+					erros(vez, p1, p2, peca, tab);
 
 				}while((p1<1 || p1>3) || (p2<1 || p2>3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checar(peca, tab) == '1'));
 				tab[p1-1][p2-1] = peca;
+				printTab(tab);
 				if(vencedor(tab) == -1){
-					printf("%s vence!\n", j2);
+					printTab(tab);
+					printf("%s venceu!\n", j2);
 					i=7;
 				}
 			}
-        printTab(tab);
+		}
 	}
-	
+	printf("%d", i);
 	if(i != 8){
 		printf("Fase de posicionamento acabou. Comeca fase de mover pecas\n");
 		
 		for(i=0; i<31; i++){
 			if(i%2==0){ //se a rodada for par o jogador 1 joga
-				printf("\nRodada %d\n", i/2);
+				printf("\nRodada %d\n", (i/2)+1);
 				printf("%d", empate1(tab));
 				if(empate1(tab)!=9){
+					printf("Turno de %s\n", j1);
+					printTab(tab);
+					vez = 1;
 					do{
-						printf("Turno de %s\n", j1);
+						printf("Faca um lance:\n");
 						scanf("%d %d  %c", &p1, &p2, &peca);
 						
-						erros(i, p1, p2, peca, tab);	
+						erros(vez, p1, p2, peca, tab);	
 
 					}while((p1<1 || p1>3) || (p2<1 || p2>3) || (peca != 'B' && peca != 'C' && peca != 'T')||(checarlance(p1, p2, peca, tab)==1));
 					lance(p1, p2, peca, tab);
+					printTab(tab);
 					if(vencedor(tab) == 1){
 						printf("%s vence!\n", j1);
 						i=31;
@@ -552,14 +575,18 @@ int main(void){
 			}
 			else{ //se a rodada for impar o jogador 2 joga
 				if(empate2(tab) !=9){
+					printf("Turno de %s\n", j2);
+					printTab(tab);
+					vez = 2;
 					do{
-						printf("Turno de %s\n", j2);
+						printf("Faca um lance:\n");
 						scanf("%d %d  %c", &p1, &p2, &peca);
 						
-						erros(i, p1, p2, peca, tab);	
+						erros(vez, p1, p2, peca, tab);	
 
 					}while((p1<1 || p1>3) || (p2<1 || p2>3) || (peca != 'b' && peca != 'c' && peca != 't')||(tab[p1-1][p2-1] != '_')||(checarlance(p1, p2, peca, tab)==1));
 					lance(p1, p2, peca, tab);
+					printTab(tab);
 					if(vencedor(tab) == -1){
 						printf("%s vence!\n", j2);
 						i=31;
