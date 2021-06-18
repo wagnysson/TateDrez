@@ -51,21 +51,23 @@ char printTab(char tab[3][3]){
     return(0);
 }  
 
- //funcao que checa se uma peca ja esta no tabuleiro. flag = '1' a peca ja esta no tabuleiro, flag = '0' a peca ainda nao esta no tabuleiro
+ //funcao que checa se uma peca ja esta no tabuleiro. flag = 1 a peca ja esta no tabuleiro, flag = 0 a peca ainda nao esta no tabuleiro, e flag = 2 a peca nao existe
 int checar(char peca, char tab[N][N]){
 	int i, j;
 	char flag = 0;
 
-	if(peca != 'c' && peca != 'b' && peca != 't' && peca != 'C' && peca != 'B' && peca != 'T'){
-		printf("Peca nao existe. Faca outro lance:\n");
+	if((peca != 'c' && peca != 'b' && peca != 't' && peca != 'C' && peca != 'B' && peca != 'T')||peca == '_'){
+		flag = 2;
 	}
+	else{
 	//para cada possibilidade de peca, checa posicao por posicao se a peca ja esta posicionada
-	for(i=0;i<3;i++){
-		for(j=0;j<3;j++){
-			if(tab[i][j] == peca){
-				flag = 1;
-			}
-		}		
+		for(i=0;i<3;i++){
+			for(j=0;j<3;j++){
+				if(tab[i][j] == peca){
+					flag = 1;
+				}
+			}		
+		}
 	}
 	return(flag);
 }	
@@ -285,7 +287,7 @@ int checarlance(int p1, int p2, char peca, char tab[N][N]){
 				break;
 				
 			default:
-				printf("Peca nao existe. Faca outro lance:\n");	
+				flag = 2; //o valor de 2 ao inves de 1 aqui eh importante para a funcao erros escrever "peca nao existe" ao inves de "movimento invalido"
 		}
 	}
 
@@ -316,8 +318,11 @@ void erros(int vez, int p1, int p2, char peca, char tab[N][N], int jogo){
 				if((checarlance(p1, p2, peca, tab) == 1) && jogo == 2){
 					printf("Movimento invalido. Faca outro lance:\n");
 				}else{
-					if(tab[p1-1][p2-1] != '_'){
+					if(tab[p1-1][p2-1] != '_' && checar(peca, tab) != 2){
 						printf("Essa casa ja esta ocupada. Faca outro lance:\n");
+					}
+					if(checar(peca, tab) == 2){
+							printf("Peca nao existe. Faca outro lance:\n");
 					}
 					
 				}
@@ -396,7 +401,7 @@ void leitura(char tab[N][N], int jogo, int vez){
 			se a casa digitada ja esta ocupada;
 			se a peca digitada ja esta no tabuleiro;
 			respectivamente e analogo para os outros whiles, se uma dessas condicoes for verdadeira o lance eh invalido e o jogador da vez deve fazer outro lance*/
-			}while((p1<1 || p1>3) || (p2<1 || p2>3) || (peca != 'B' && peca != 'C' && peca != 'T') || (tab[p1-1][p2-1] != '_') || (checar(peca, tab) == 1));
+			}while((p1<1 || p1>3) || (p2<1 || p2>3) || (peca != 'B' && peca != 'C' && peca != 'T') || (tab[p1-1][p2-1] != '_') || (checar(peca, tab) != 0));
 			//depois de o jogador fazer um lance valido a peca eh colocada no tabuleiro na posicao escolhida
 			tab[p1-1][p2-1] = peca;
 			printTab(tab);
@@ -408,7 +413,7 @@ void leitura(char tab[N][N], int jogo, int vez){
 					
 					erros(vez, p1, p2, peca, tab, jogo);
 
-				}while((p1<1 || p1>3) || (p2<1 || p2>3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checar(peca, tab) == 1));
+				}while((p1<1 || p1>3) || (p2<1 || p2>3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checar(peca, tab) != 0));
 				tab[p1-1][p2-1] = peca;
 				printTab(tab);
 			
