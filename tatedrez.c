@@ -201,8 +201,6 @@ int checarlance(int p1, int p2, char peca, char tab[3][3]){
 						}else{
 							//eh conferido se a torre andou mais de duas casas
 							if(abs(p1-1-i) == 2 || abs(p2-1-j) == 2){
-								flag = 0;//isso eh irrelevante para checar a validade do lance, mas eh importante para conferir se o lance seria valido  caso a casa nao estivesse ocupada
-								//se andou duas casas pela linha i, entao passou pela coluna 1
 								if(p1-1 == i){
 									//assim, se a casa [i][1] nao esta vazia, o lance eh considerado invalido
 									if(tab[i][1] != '_'){
@@ -272,7 +270,6 @@ int checarlance(int p1, int p2, char peca, char tab[3][3]){
 							flag = 1;
 						}else{
 							if(abs(p1-1-i) == 2 || abs(p2-1-j) == 2){
-								flag = 0;
 								if(p1-1 == i){
 									if(tab[i][1] != '_'){
 										flag = 1;
@@ -375,7 +372,7 @@ int empate1(char tab[3][3]){
 	//assim, eh usado como criterio de empate se a funcao eh igual ou diferente de 9
 	for(i=0; i<3; i++){
 		for(j=0; j<3; j++){
-			if((checarlance(i+1, j+1, 'B', tab) != 0 && checarlance(i+1, j+1, 'C', tab) != 0 && checarlance(i+1, j+1, 'T', tab) != 0)||(tab[i+1][j+1] != '_')){
+			if((checarlance(i+1, j+1, 'B', tab) != 0 && checarlance(i+1, j+1, 'C', tab) != 0 && checarlance(i+1, j+1, 'T', tab) != 0)||(tab[i][j] != '_')){
 				flag = flag + 1;
 			}
 		}
@@ -389,7 +386,7 @@ int empate2(char tab[3][3]){
 	//funciona da mesma forma que empate1, exceto que para as pecas do jogador 2
 	for(i=0; i<3; i++){
 		for(j=0; j<3; j++){
-			if(checarlance(i+1, j+1, 'b', tab) != 0 && checarlance(i+1, j+1, 'c', tab) != 0 && checarlance(i+1, j+1, 't', tab) != 0||(tab[i+1][j+1] != '_')){
+			if(checarlance(i+1, j+1, 'b', tab) != 0 && checarlance(i+1, j+1, 'c', tab) != 0 && checarlance(i+1, j+1, 't', tab) != 0||(tab[i][j] != '_')){
 				flag = flag + 1;
 			}
 		}
