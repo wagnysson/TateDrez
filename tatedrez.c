@@ -386,7 +386,7 @@ int empate2(char tab[3][3]){
 	//funciona da mesma forma que empate1, exceto que para as pecas do jogador 2
 	for(i=0; i<3; i++){
 		for(j=0; j<3; j++){
-			if(checarlance(i+1, j+1, 'b', tab) != 0 && checarlance(i+1, j+1, 'c', tab) != 0 && checarlance(i+1, j+1, 't', tab) != 0||(tab[i][j] != '_')){
+			if((checarlance(i+1, j+1, 'b', tab) != 0 && checarlance(i+1, j+1, 'c', tab) != 0 && checarlance(i+1, j+1, 't', tab) != 0) || (tab[i][j] != '_')){
 				flag = flag + 1;
 			}
 		}
