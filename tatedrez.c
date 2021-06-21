@@ -323,11 +323,11 @@ void erros(int vez, int p1, int p2, char peca, char tab[3][3], int jogo){
 				erro = 1;
 			}
 		}
-		//verifica se a peca ja estah no tabuleiro, se nao foi mostrada alguma mensagem de erro logo antes desta e se esta na fase de posicionamento, jah que esta mensagem so deve aparecer na fase de posicionamento (jogo = 1)
+		//verifica se a peca ja estah no tabuleiro, se nao foi mostrada alguma mensagem de erro logo antes desta e se estah na fase de posicionamento, jah que esta mensagem so deve aparecer na fase de posicionamento (jogo = 1)
 		if((checar(peca, tab) == 1) && (erro != 1) && (jogo == 1)){
 			printf("Esta peca ja estah no tabuleiro. Faca outro lance:\n");
 		}else{
-			if((p1>=1 && p1<=3) && (p2>=1 && p2<=3) && (erro != 1)){
+			if((erro != 1)){
 				//diz que o movimento eh invalido quando ele eh checado pela checarlance e ela retorna 1, isto so pode ocorrer na fase de movimentar pecas (jogo = 2)
 				if((checarlance(p1, p2, peca, tab) == 1) && jogo == 2){
 					printf("Movimento invalido. Faca outro lance:\n");
