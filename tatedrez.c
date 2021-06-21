@@ -143,161 +143,158 @@ int checarlance(int p1, int p2, char peca, char tab[3][3]){
 	//inicializando a flag
 	flag = 0;
 	
-	//confere se a casa digitada esta vazia. Se nao esta, ja considera o lance invalido
-	if(tab[p1-1][p2-1] != '_'){
-		flag=1;
-	}
-	//se esta vazia, as demais checagens sao realizadas
-	else{
 	//verifica se a condicao para que a peca escolhida se mova eh satisfeita e devolve uma flag. se flag = 0 o movimento eh valido, se flag = 1 o movimento nao eh valido
-		switch(peca){
-			//para o bispo (B e b), é
-			case 'b':
-				for(i=0;i<3;i++){
-					for(j=0;j<3;j++){
-						//verifica em que local do tabuleiro a peca esta para que seus indices sejam utilizados mais a frente (isto ocorre em todas as verificacoes desta funcao)
-						if(tab[i][j] == peca){
-							//primeiro, eh checado se o movimento foi de fato uma diagonal
-							//eh possivel descobrir isso comparando o modulo das diferencas entre a casa digitada e a casa presente. O bispo deve se movimentar a mesma quantidade de casas na horizontal e na vertical para que haja o movimento em diagonal corretamente
-							if(abs((p1-1)-i) == abs((p2-1)-j)){
-								//depois, eh conferido se o bispo esta tentando se movimentar mais de uma casa
-								if(abs((p1-1)-i) == 2 && abs((p2-1)-j) == 2){
-									//se estah, com certeza ira passar pela casa central do tabuleiro, entao checa-se se esta casa esta vazia, se nao estiver, entao flag = 1, caso contrario flag = 0.
-									if(tab[1][1] != '_'){
-										flag = 1;
-									}
-								}else{
-									flag = 0;
+	//nao eh checado se a casa esta vazia, para proposito de mensagens de erro na funcao erros
+	//a casa estar vazia ou nao eh checado separadamente toda vez que necessario
+	switch(peca){
+		//para o bispo (B e b), é
+		case 'b':
+			for(i=0;i<3;i++){
+				for(j=0;j<3;j++){
+					//verifica em que local do tabuleiro a peca esta para que seus indices sejam utilizados mais a frente (isto ocorre em todas as verificacoes desta funcao)
+					if(tab[i][j] == peca){
+						//primeiro, eh checado se o movimento foi de fato uma diagonal
+						//eh possivel descobrir isso comparando o modulo das diferencas entre a casa digitada e a casa presente. O bispo deve se movimentar a mesma quantidade de casas na horizontal e na vertical para que haja o movimento em diagonal corretamente
+						if(abs((p1-1)-i) == abs((p2-1)-j)){
+							//depois, eh conferido se o bispo esta tentando se movimentar mais de uma casa
+							if(abs((p1-1)-i) == 2 && abs((p2-1)-j) == 2){
+								//se estah, com certeza ira passar pela casa central do tabuleiro, entao checa-se se esta casa esta vazia, se nao estiver, entao flag = 1, caso contrario flag = 0.
+								if(tab[1][1] != '_'){
+									flag = 1;
 								}
 							}else{
-								flag = 1;
-							}
-						}
-					}	
-				}
-				break;
-
-			case 'c':
-				for(i=0;i<3;i++){
-					for(j=0;j<3;j++){
-						if(tab[i][j] == peca){
-							//o movimento do cavalo sempre ocorre de tal forma que percorre distancia euclidiana de sqrt(5), entao checa-se isso
-							//a condicao nao usa um simples == para evitar imprecisoes de float
-							if((sqrt(5)-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && (sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < sqrt(5)+0.1)){
 								flag = 0;
 							}
-							else{
-								flag = 1;
-							}
+						}else{
+							flag = 1;
 						}
-					} 
-				}
-				break;
+					}
+				}	
+			}
+			break;
 
-			case 't':
-				for(i=0;i<3;i++){
-					for(j=0;j<3;j++){
-						if(tab[i][j] == peca){
-							//se o movimento digitado de fato foi de uma torre, entao com certeza ou a coordenada i ou a j se mantera constante
-							//entao se as duas forem diferentes ja eh considerado invalido
-							if((i != p1-1 && j != p2-1)){
-								flag = 1;
-							}else{
-								//eh conferido se a torre andou mais de duas casas
-								if(abs(p1-1-i) == 2 || abs(p2-1-j) == 2){
-									//se andou duas casas pela linha i, entao passou pela coluna 1
-									if(p1-1 == i){
-										//assim, se a casa [i][1] nao esta vazia, o lance eh considerado invalido
-										if(tab[i][1] != '_'){
+		case 'c':
+			for(i=0;i<3;i++){
+				for(j=0;j<3;j++){
+					if(tab[i][j] == peca){
+						//o movimento do cavalo sempre ocorre de tal forma que percorre distancia euclidiana de sqrt(5), entao checa-se isso
+						//a condicao nao usa um simples == para evitar imprecisoes de float
+						if((sqrt(5)-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && (sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < sqrt(5)+0.1)){
+							flag = 0;
+						}
+						else{
+							flag = 1;
+						}
+					}
+				} 
+			}
+			break;
+
+		case 't':
+			for(i=0;i<3;i++){
+				for(j=0;j<3;j++){
+					if(tab[i][j] == peca){
+						//se o movimento digitado de fato foi de uma torre, entao com certeza ou a coordenada i ou a j se mantera constante
+						//entao se as duas forem diferentes ja eh considerado invalido
+						if((i != p1-1 && j != p2-1)){
+							flag = 1;
+						}else{
+							//eh conferido se a torre andou mais de duas casas
+							if(abs(p1-1-i) == 2 || abs(p2-1-j) == 2){
+								flag = 0;//isso eh irrelevante para checar a validade do lance, mas eh importante para conferir se o lance seria valido  caso a casa nao estivesse ocupada
+								//se andou duas casas pela linha i, entao passou pela coluna 1
+								if(p1-1 == i){
+									//assim, se a casa [i][1] nao esta vazia, o lance eh considerado invalido
+									if(tab[i][1] != '_'){
+										flag = 1;
+									}
+								//mesmo raciocinio caso tenha andado duas casas pela coluna j
+								}else{
+									if(p2-1 == j){
+										if(tab[1][j] != '_'){
 											flag = 1;
 										}
-									//mesmo raciocinio caso tenha andado duas casas pela coluna j
-									}else{
-										if(p2-1 == j){
-											if(tab[1][j] != '_'){
-												flag = 1;
-											}
-										}
 									}
-								//caso nao tenha andado duas casas, o lance ja eh considerado valido, pois ja foi checado antes se a casa desejada esta ocupada
-								}else{
-									flag=0;
 								}
+							//caso nao tenha andado duas casas, o lance ja eh considerado valido, pois ja foi checado antes se a casa desejada esta ocupada
+							}else{
+								flag=0;
 							}
 						}
 					}
+				}
+			}	   
+			break;
+			
+		//para o bispo do j1, acontece o mesmo que para o bispo do j2
+		case 'B':
+			for(i=0;i<3;i++){
+				for(j=0;j<3;j++){
+					if(tab[i][j] == peca){
+						if(abs((p1-1)-i) == abs((p2-1)-j)){
+							if(abs((p1-1)-i) == 2){
+								if(tab[1][1] != '_'){
+									flag = 1;
+								}
+							}else{
+								flag = 0;
+							}
+						}else{
+							flag = 1;
+						}
+					}
+				}	
+			}
+			break;
+			
+		//para o cavalo do j1, acontece o mesmo que para o cavalo do j2
+		case 'C':
+			for(i=0;i<3;i++){
+				for(j=0;j<3;j++){
+					if(tab[i][j] == peca){
+						if((sqrt(5)-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && ((sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < sqrt(5)+0.1))){
+							flag = 0;
+						}
+						else{
+							flag = 1;
+						}   
+					}
 				}	   
-				break;
-				
-			//para o bispo do j1, acontece o mesmo que para o bispo do j2
-			case 'B':
-				for(i=0;i<3;i++){
-					for(j=0;j<3;j++){
-						if(tab[i][j] == peca){
-							if(abs((p1-1)-i) == abs((p2-1)-j)){
-								if(abs((p1-1)-i) == 2){
-									if(tab[1][1] != '_'){
+			}
+			break;
+			
+		//para a torre do j1, acontece o mesmo que para a torre do j2
+		case 'T':
+			for(i=0;i<3;i++){
+				for(j=0;j<3;j++){
+					if(tab[i][j] == peca){
+						if((i != p1-1 && j != p2-1)){
+							flag = 1;
+						}else{
+							if(abs(p1-1-i) == 2 || abs(p2-1-j) == 2){
+								flag = 0;
+								if(p1-1 == i){
+									if(tab[i][1] != '_'){
 										flag = 1;
 									}
 								}else{
-									flag = 0;
-								}
-							}else{
-								flag = 1;
-							}
-						}
-					}	
-				}
-				break;
-				
-			//para o cavalo do j1, acontece o mesmo que para o cavalo do j2
-			case 'C':
-				for(i=0;i<3;i++){
-					for(j=0;j<3;j++){
-						if(tab[i][j] == peca){
-							if((sqrt(5)-0.1 < sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2))) && ((sqrt(pow((i+1)-p1,2)+pow((j+1)-p2,2)) < sqrt(5)+0.1))){
-								flag = 0;
-							}
-							else{
-								flag = 1;
-							}   
-						}
-					}	   
-				}
-				break;
-				
-			//para a torre do j1, acontece o mesmo que para a torre do j2
-			case 'T':
-				for(i=0;i<3;i++){
-					for(j=0;j<3;j++){
-						if(tab[i][j] == peca){
-							if((i != p1-1 && j != p2-1)){
-								flag = 1;
-							}else{
-								if(abs(p1-1-i) == 2 || abs(p2-1-j) == 2){
-									if(p1-1 == i){
-										if(tab[i][1] != '_'){
+									if(p2-1 == j){
+										if(tab[1][j] != '_'){
 											flag = 1;
 										}
-									}else{
-										if(p2-1 == j){
-											if(tab[1][j] != '_'){
-												flag = 1;
-											}
-										}
 									}
-								}else{
-									flag=0;
 								}
+							}else{
+								flag=0;
 							}
 						}
 					}
-				}	   
-				break;
-				
-			default:
-				flag = 2; //o valor de 2 ao inves de 1 aqui eh importante para a funcao erros escrever "peca nao existe" ao inves de "movimento invalido"
-		}
+				}
+			}	   
+			break;
+			
+		default:
+			flag = 2; //o valor de 2 ao inves de 1 aqui eh importante para a funcao erros escrever "peca nao existe" ao inves de "movimento invalido"
 	}
 
     return(flag);	
@@ -328,12 +325,17 @@ void erros(int vez, int p1, int p2, char peca, char tab[3][3], int jogo){
 			printf("Esta peca ja estah no tabuleiro. Faca outro lance:\n");
 		}else{
 			if((erro != 1)){
-				//diz que o movimento eh invalido quando ele eh checado pela checarlance e ela retorna 1, isto so pode ocorrer na fase de movimentar pecas (jogo = 2)
+				//se a casa digitada esta ocupada, mas o lance nao seria valido, teremos flag = 1
+				//se nao esta ocupada, mas o lance seria invalido, teremos flag = 1
+				//se esta ocupada, e o lance seria valido, teremos flag = 0
 				if((checarlance(p1, p2, peca, tab) == 1) && jogo == 2){
 					printf("Movimento invalido. Faca outro lance:\n");
 				}else{
+					if(checarlance(p1,p2,peca,tab)==0 && (tab[p1-1][p2-1] != '_')){
+						printf("Essa casa ja esta ocupada. Faca outro lance:\n");
+					}
 					//checa se a casa jah estah ocupada e mostra a mensagem de erro caso jah esteja
-					if(tab[p1-1][p2-1] != '_' && checar(peca, tab) != 2){
+					if(tab[p1-1][p2-1] != '_' && checar(peca, tab) != 2 && jogo == 1){
 						printf("Essa casa ja esta ocupada. Faca outro lance:\n");
 					}
 					//checa se a peca existe, se nao, mostra a mensagem de erro
@@ -373,7 +375,7 @@ int empate1(char tab[3][3]){
 	//assim, eh usado como criterio de empate se a funcao eh igual ou diferente de 9
 	for(i=0; i<3; i++){
 		for(j=0; j<3; j++){
-			if(checarlance(i+1, j+1, 'B', tab) != 0 && checarlance(i+1, j+1, 'C', tab) != 0 && checarlance(i+1, j+1, 'T', tab) != 0){
+			if((checarlance(i+1, j+1, 'B', tab) != 0 && checarlance(i+1, j+1, 'C', tab) != 0 && checarlance(i+1, j+1, 'T', tab) != 0)||(tab[i+1][j+1] != '_')){
 				flag = flag + 1;
 			}
 		}
@@ -387,7 +389,7 @@ int empate2(char tab[3][3]){
 	//funciona da mesma forma que empate1, exceto que para as pecas do jogador 2
 	for(i=0; i<3; i++){
 		for(j=0; j<3; j++){
-			if(checarlance(i+1, j+1, 'b', tab) != 0 && checarlance(i+1, j+1, 'c', tab) != 0 && checarlance(i+1, j+1, 't', tab) != 0){
+			if(checarlance(i+1, j+1, 'b', tab) != 0 && checarlance(i+1, j+1, 'c', tab) != 0 && checarlance(i+1, j+1, 't', tab) != 0||(tab[i+1][j+1] != '_')){
 				flag = flag + 1;
 			}
 		}
@@ -443,7 +445,7 @@ void leitura(char tab[3][3], int jogo, int vez){
 				
 				erros(vez, p1, p2, peca, tab, jogo);	
 
-			}while((p1<1 || p1>3) || (p2<1 || p2>3) || (peca != 'B' && peca != 'C' && peca != 'T')||(checarlance(p1, p2, peca, tab) != 0));
+			}while((p1<1 || p1>3) || (p2<1 || p2>3) || (peca != 'B' && peca != 'C' && peca != 'T')||(checarlance(p1, p2, peca, tab) != 0)||(tab[p1-1][p2-1] != '_') );
 			lance(p1, p2, peca, tab);
 			printTab(tab);
 		}
