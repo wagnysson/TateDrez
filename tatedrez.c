@@ -328,7 +328,7 @@ void erros(int vez, int p1, int p2, char peca, char tab[3][3], int jogo){
 				if((checarlance(p1, p2, peca, tab) == 1) && jogo == 2){
 					printf("Movimento invalido. Faca outro lance:\n");
 				}else{
-					if(checarlance(p1,p2,peca,tab)==0 && (tab[p1-1][p2-1] != '_')){
+					if(checarlance(p1,p2,peca,tab)==0 && (tab[p1-1][p2-1] != '_') && jogo == 2){
 						printf("Essa casa ja esta ocupada. Faca outro lance:\n");
 					}
 					//checa se a casa jah estah ocupada e mostra a mensagem de erro caso jah esteja
