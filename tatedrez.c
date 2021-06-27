@@ -16,7 +16,7 @@ void info(void){
 	printf("C, c - CAVALO\nB, b - BISPO\nT, t - TORRE\n\n");
 	printf("FASE DE POSICIONAMENTO - Os jogadores fazem lances de posicionamento alternados começando pelo jogador 1. Eles podem colocar suas pecas em qualquer casa do tabuleiro que esteja vazia.\n\n");
 	printf("FASE DE MOVIMENTAR PECAS - Depois que todas as pecas estiverem posicionadas comeca a FASE DE MOVIMENTAR PECAS. Em cada rodada ha o turno do jogador 1 e o turno do jogador 2 e em cada um deles o jogador da vez movimenta uma de suas pecas. O OBJETIVO eh alinhar suas tres pecas como no jogo da velha (na diagonal, em linha ou em coluna), porem suas pecas se movimentam como no xadrez, ou seja, o CAVALO anda em L (uma casa na vertical ou na horizontal e outra na diagonal) e pode 'saltar' pecas que estejam no seu caminho, o BISPO anda apenas na diagonal quantas casas quiser sem poder 'saltar' pecas que estejam no seu caminho e a TORRE anda apenas na vertical ou na horizontal quantas casas quiser sem poder 'saltar' pecas que estejam no seu caminho tambem.\n\n");
-        printf("QUEM VENCE?\nO jogador que conseguir alinhas suas tres pecas em uma linha, coluna ou na diagonal primeiro vence.\n\n");
+	printf("QUEM VENCE?\nO jogador que conseguir alinhas suas tres pecas em uma linha, coluna ou na diagonal primeiro vence.\n\n");
 	printf("QUANDO DAH EMPATE?\nO empate ocorre quando nao ha movimentos possiveis para nenhuma peca de um jogador OU se depois de 30 rodadas (sem contar a fase de posicionamento) nenhum dos jogadores venceu.\n\n");
 	printf("Para SAIR DO JOGO tecle ctrl+C\n\n\n");
 	return;
