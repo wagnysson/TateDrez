@@ -404,11 +404,11 @@ int empate2(char tab[3][3]){
 int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 	char taba[3][3];
 	lanceC lances[27];
-	int i, j, k;
+	int i, j, k, l, m;
 	
 	for(i=0; i<3;i++){
 		for(j=0; j<3; j++){
-			taba[i][j]= tab[i][j];
+			taba[i][j] = tab[i][j];
 		}
 	}
 	
@@ -451,6 +451,10 @@ int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 			}
 		}
 	}
+	// printf("%d\n", k);
+	// for(i=0;i<k;i++){
+	// 	printf("p1: %d, p2: %d, peca: %c", lances[i].p1, lances[i].p2, lances[i].peca);
+	// }
 	for(i=0;i<k;i++){
 		if(taba[lances[i].p1][lances[i].p2] == '_'){
 			taba[lances[i].p1][lances[i].p2] = lances[i].peca;
@@ -463,9 +467,9 @@ int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 			return(1);
 		}
 		else{
-			for(i=0; i<3;i++){
-				for(j=0; j<3; j++){
-					taba[i][j]= tab[i][j];
+			for(l=0; l<3;l++){
+				for(m=0; m<3; m++){
+					taba[l][m]= tab[l][m];
 				}
 			}
 		}
@@ -534,6 +538,7 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 			}
 		}
 	}
+	printTab(taba);
 	for(i=0;i<k;i++){
 		if(taba[lances[i].p1][lances[i].p2] == '_'){
 			taba[lances[i].p1][lances[i].p2] = lances[i].peca;
@@ -544,14 +549,15 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 			return;
 		}
 	}
-
-	jogada[0].p1 = (rand() % 3);
-	jogada[0].p2 = (rand() % 3);
-	if((rand() % 2)==0){
-		jogada[0].peca = 'C';
-	}else{
-		jogada[0].peca = 'T';
-	}
+	do{
+		jogada[0].p1 = (rand() % 3);
+		jogada[0].p2 = (rand() % 3);
+		if((rand() % 2)==0){
+			jogada[0].peca = 'C';
+		}else{
+			jogada[0].peca = 'T';
+		}
+	}while(tab[jogada[0].p1][jogada[0].p2] != '_');
 	rec++;
 	return;
 }
@@ -559,30 +565,25 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 
 
 void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
-	int p1, p2;
-	char peca;
 	
 	if(jogo == 1){
 		if(i == 0){
 			tab[1][1] = 'B';
 		}
-		if(i == 2){
+		if(i % 2 == 0){
 			if(tab[0][0] != '_' || tab[0][2] != '_' || tab[2][0] != '_' || tab[2][2] != '_' ){
 				printf("entrou no if\n");
 				lancepc(tab, jogo, jogada);
 				printf("print embaixo de \n");
-				// if(tab[jogada[0].p1][jogada[0].p2] == '_'){
-					p1 = jogada[0].p1;
-					p2 = jogada[0].p2;
-					peca = jogada[0].peca;
-				// }
-				printf("%d\n", p1);
-				printf("%d\n", p2);
-				printf("%c\n", peca);
 				
-				tab[p1][p2] = peca;
+				printf("%d\n", jogada[0].p1);
+				printf("%d\n", jogada[0].p2);
+				printf("%c\n", jogada[0].peca);
+				tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
 				return;
 			}
+		}
+		if(i == 2){	
 			if(tab[0][1] != '_'){
 				tab[0][0] = 'C';
 			}
