@@ -5,6 +5,13 @@
 #include <math.h> //usada para funcao pow e sqrt
 #include <stdlib.h> //usada para a funcao abs
 #include <string.h> //usada para a funcao strcmp
+#include <time.h>
+
+typedef struct{
+	int p1;
+	int p2;
+	char peca;
+}lanceC;
 
 //instrucoes de como jogar
 void info(void){
@@ -69,7 +76,7 @@ int checar(char peca, char tab[3][3]){
 	return(flag);
 }	
 
-// confere se alguem venceu. se a flag = 1 entao o jogador 1 venceu, se flag = 2 o jogador 2 venceu
+// confere se alguem venceu. se a flag = 1 entao o jogador 1 venceu, se flag = -1 o jogador 2 venceu
 int vencedor(char tab[3][3]){
 	int i;//contador
 	int flag = 0; // variavel flag que indica o que foi citado no comentario explicando a funcao
@@ -394,14 +401,187 @@ int empate2(char tab[3][3]){
 	return(flag);
 }
 
-void pcjoga(int i, char tab[3][3], int jogo){
+int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
+	char taba[3][3];
+	lanceC lances[27];
+	int i, j, k;
+	
+	for(i=0; i<3;i++){
+		for(j=0; j<3; j++){
+			taba[i][j]= tab[i][j];
+		}
+	}
+	
+	k=0;
+	if(jogo==1){
+		for(i=0; i<3; i++){
+			for(j=0; j<3; j++){
+				if(checar('b', tab)==0){
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 'b';
+					k++;
+				}
+			}
+		}
+		for(i=0; i<3; i++){
+			for(j=0; j<3; j++){
+				if(checar('c', tab)==0){
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 'c';
+					k++;
+				}
+			}
+		}
+		for(i=0; i<3; i++){
+			for(j=0; j<3; j++){
+				if(checar('t', tab)==0){
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 't';
+					k++;
+				}
+			}
+		}
+	}
+	for(i=0;i<k;i++){
+		if(taba[lances[i].p1][lances[i].p2] == '_'){
+			taba[lances[i].p1][lances[i].p2] = lances[i].peca;
+			printTab(taba);
+		}
+		if(vencedor(taba) == -1){
+			jogada[0].p1 = lances[i].p1;
+			jogada[0].p2 = lances[i].p2;
+			jogada[0].peca = lances[i].peca;
+			return(1);
+		}
+		else{
+			for(i=0; i<3;i++){
+				for(j=0; j<3; j++){
+					taba[i][j]= tab[i][j];
+				}
+			}
+		}
+	}
+	return(0);
+	
+}
+
+void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
+	
+	lanceC lances[18];
+	int i, j, k, l, m, rec = 0;
+	char taba[3][3];
+	srand(time(NULL));
+	for(i=0; i<3;i++){
+		for(j=0; j<3; j++){
+			taba[i][j]= tab[i][j];
+		}
+	}
+	
+	k=0;
+	if(jogo==1){
+		for(i=0; i<3; i++){
+			for(j=0; j<3; j++){
+				if(checar('C', tab)==0){
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 'C';
+					k++;
+				}
+			}
+		}
+		for(i=0; i<3; i++){
+			for(j=0; j<3; j++){
+				if(checar('T', tab)==0){
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 'T';
+					k++;
+				}
+			}
+		}
+	}
+	// for (i=0; i<k; i++){
+	// 	printf("p1:  %d, p2:  %d, p3:  %c", lances[i].p1, lances[i].p2, lances[i].peca);
+	// }
+	for(i=0;i<k;i++){
+		if(taba[lances[i].p1][lances[i].p2] == '_'){
+			taba[lances[i].p1][lances[i].p2] = lances[i].peca;
+			printTab(taba);
+		}
+		if(vencedor(taba)==1){
+			jogada[0].p1 = lances[i].p1;
+			jogada[0].p2 = lances[i].p2;
+			jogada[0].peca = lances[i].peca;
+			return;
+		}else{
+			for(l=0; l<3;l++){
+				for(m=0; m<3; m++){
+					taba[l][m]= tab[l][m];
+				}
+			}
+		}
+	}
+	for(i=0;i<k;i++){
+		if(taba[lances[i].p1][lances[i].p2] == '_'){
+			taba[lances[i].p1][lances[i].p2] = lances[i].peca;
+			printTab(taba);
+		}
+		if(posvit2(taba, jogo, jogada)==1){
+			
+			return;
+		}
+	}
+
+	jogada[0].p1 = (rand() % 3);
+	jogada[0].p2 = (rand() % 3);
+	if((rand() % 2)==0){
+		jogada[0].peca = 'C';
+	}else{
+		jogada[0].peca = 'T';
+	}
+	rec++;
+	return;
+}
+
+
+
+void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
+	int p1, p2;
+	char peca;
+	
 	if(jogo == 1){
 		if(i == 0){
 			tab[1][1] = 'B';
 		}
 		if(i == 2){
 			if(tab[0][0] != '_' || tab[0][2] != '_' || tab[2][0] != '_' || tab[2][2] != '_' ){
+				printf("entrou no if\n");
+				lancepc(tab, jogo, jogada);
+				printf("print embaixo de \n");
+				// if(tab[jogada[0].p1][jogada[0].p2] == '_'){
+					p1 = jogada[0].p1;
+					p2 = jogada[0].p2;
+					peca = jogada[0].peca;
+				// }
+				printf("%d\n", p1);
+				printf("%d\n", p2);
+				printf("%c\n", peca);
 				
+				tab[p1][p2] = peca;
+				return;
 			}
 			if(tab[0][1] != '_'){
 				tab[0][0] = 'C';
@@ -481,7 +661,7 @@ void pcjoga(int i, char tab[3][3], int jogo){
 	return;
 }
 //le o lance desejado e confere, atraves de criterios e outras funcoes, se eh valido
-void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo){
+void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jogada[1]){
 	char p1, p2; //p1 - linha do tabuleiro, p2 - coluna do tabuleiro.
     char peca; // peca escolhida para mover
 	int intermediario;
@@ -592,7 +772,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo){
 		if(mododejogo == 2){
 			if(jogo == 1){
 				if(vez == 1){
-					pcjoga(i, tab, jogo);
+					pcjoga(i, tab, jogo, jogada);
 					printTab(tab);
 				}else{
 					do{
@@ -616,7 +796,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo){
 				}
 			}else{
 				if(vez == 1){
-					pcjoga(i, tab, jogo);
+					pcjoga(i, tab, jogo, jogada);
 					printTab(tab);
 				}else{
 					do{
@@ -652,6 +832,7 @@ int main(void){
 	int vez = 0; //indica de quem eh a vez de jogar, se vez = 1 entao eh a vez do jogador 1, se v = 2 eh a vez do jogador 2
 	int jogo = 0; //indica qual fase do jogo esta acontecendo, se for a fase de posicionamento entao jogo = 1, se for a fase de movimentacao de pecas entao jogo = 2
     int mododejogo;//se o mododejogo for 1, então eh jogador VS jogador, se for 2 eh computador VS jogador
+	lanceC jogada[1];
 	
 	info();
     printf("Menu:\n");
@@ -689,7 +870,7 @@ int main(void){
                 printf("Turno de %s\n", j1);
                 printTab(tab);
                 vez = 1;
-                leitura(i, tab, jogo, vez, mododejogo);
+                leitura(i, tab, jogo, vez, mododejogo, jogada);
                 //verifica se o jogador 1 eh o vencedor, se for printa que ele venceu e i recebe 7 para sair do looping da fase de posicionamento
                 if(vencedor(tab) == 1){
                     printTab(tab);
@@ -699,7 +880,7 @@ int main(void){
                 else{
                     printf("Turno de %s\n", j2);
                     vez = 2;
-                    leitura(i, tab, jogo, vez, mododejogo);
+                    leitura(i, tab, jogo, vez, mododejogo, jogada);
                     if(vencedor(tab) == -1){
                         printTab(tab);
                         printf("%s venceu!\n", j2);
@@ -721,8 +902,8 @@ int main(void){
                     if(empate1(tab)!=9){
                         printf("Turno de %s\n", j1);
                         vez = 1;
-                        leitura(i, tab, jogo, vez, mododejogo);
-                        //depois que leu-se a jogada, eh checado se houve vitoria
+                        leitura(i, tab, jogo, vez, mododejogo, jogada);
+                        //depois que leu-se a , eh checado se houve vitoria
                         if(vencedor(tab) == 1){
                             printf("%s vence!\n", j1);
                             i=70;
@@ -738,8 +919,8 @@ int main(void){
                     if(empate2(tab) !=9){
                         printf("Turno de %s\n", j2);
                         vez = 2;
-                        leitura(i, tab, jogo, vez, mododejogo);
-                        //depois que leu-se a jogada, eh checado se houve vitoria
+                        leitura(i, tab, jogo, vez, mododejogo, jogada);
+                        //depois que leu-se a , eh checado se houve vitoria
                         if(vencedor(tab) == -1){
                             printf("%s vence!\n", j2);
                             i=70;
@@ -752,9 +933,9 @@ int main(void){
             }
         }
         //caso tenha um empate por falta de lance ou uma vitoria, i != 31
-        //entao o empate de jogadas de mais so acontece se o for anterior acabar no i=31
+        //entao o empate de s de mais so acontece se o for anterior acabar no i=31
         if(i == 60){
-            printf("EMPATE: Ocorreram mais de 30 jogadas e nao houve vitorias");
+            printf("EMPATE: Ocorreram mais de 30 s e nao houve vitorias");
         }
     }else{
 		if(mododejogo == 2){
@@ -779,7 +960,7 @@ int main(void){
 					printf("\nRodada %d\n", (i/2)+1);
 					printf("Turno do Computador\n");
 					vez = 1;
-					leitura(i, tab, jogo, vez, mododejogo);
+					leitura(i, tab, jogo, vez, mododejogo, jogada);
 					//verifica se o jogador 1 eh o vencedor, se for printa que ele venceu e i recebe 7 para sair do looping da fase de posicionamento
 					if(vencedor(tab) == 1){
 						printTab(tab);
@@ -789,7 +970,7 @@ int main(void){
 					else{
 						printf("Turno de %s\n", j2);
 						vez = 2;
-						leitura(i, tab, jogo, vez, mododejogo);
+						leitura(i, tab, jogo, vez, mododejogo, jogada);
 						if(vencedor(tab) == -1){
 							printTab(tab);
 							printf("%s venceu!\n", j2);
@@ -811,8 +992,8 @@ int main(void){
 						if(empate1(tab)!=9){
 							printf("Turno do Computador\n");
 							vez = 1;
-							leitura(i, tab, jogo, vez, mododejogo);
-							//depois que leu-se a jogada, eh checado se houve vitoria
+							leitura(i, tab, jogo, vez, mododejogo, jogada);
+							//depois que leu-se a , eh checado se houve vitoria
 							if(vencedor(tab) == 1){
 								printf("Computador vence!\n");
 								i=70;
@@ -828,8 +1009,8 @@ int main(void){
 						if(empate2(tab) !=9){
 							printf("Turno de %s\n", j2);
 							vez = 2;
-							leitura(i, tab, jogo, vez, mododejogo);
-							//depois que leu-se a jogada, eh checado se houve vitoria
+							leitura(i, tab, jogo, vez, mododejogo, jogada);
+							//depois que leu-se a , eh checado se houve vitoria
 							if(vencedor(tab) == -1){
 								printf("%s vence!\n", j2);
 								i=70;
@@ -842,9 +1023,9 @@ int main(void){
 				}
 			}
 			//caso tenha um empate por falta de lance ou uma vitoria, i != 31
-			//entao o empate de jogadas de mais so acontece se o for anterior acabar no i=31
+			//entao o empate de s de mais so acontece se o for anterior acabar no i=31
 			if(i == 60){
-				printf("EMPATE: Ocorreram mais de 30 jogadas e nao houve vitorias");
+				printf("EMPATE: Ocorreram mais de 30 s e nao houve vitorias");
 			}
 		}
     }
