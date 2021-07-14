@@ -580,25 +580,22 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 
 
 void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
-	
 	if(jogo == 1){
 		if(i == 0){
 			tab[1][1] = 'B';
 		}
-		if(i % 2 == 0){
-			if(tab[0][0] != '_' || tab[0][2] != '_' || tab[2][0] != '_' || tab[2][2] != '_' ){
-				printf("entrou no if\n");
-				lancepc(tab, jogo, jogada);
-				printf("print embaixo de \n");
-				
-				printf("%d\n", jogada[0].p1);
-				printf("%d\n", jogada[0].p2);
-				printf("%c\n", jogada[0].peca);
-				tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
-				return;
-			}
+		if((tab[0][0] != '_' || tab[0][2] != '_' || tab[2][0] != '_' || tab[2][2] != '_') && i == 2 ){
+			lancepc(tab, jogo, jogada);
+			tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
+			jogada[0].p1 = 0;
+			return;
 		}
-		if(i == 2){	
+		if(i == 2){
+			if(jogada[0].p1==0){
+				lancepc(tab, jogo, jogada);
+				tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
+				jogada[0].p1 = 0;
+			}
 			if(tab[0][1] != '_'){
 				tab[0][0] = 'C';
 				return;
@@ -617,15 +614,20 @@ void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 			}
 		}
 		if(i == 4){
+			if(jogada[0].p1==0){
+				lancepc(tab, jogo, jogada);
+				tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
+				jogada[0].p1 = 0;
+			}
 			if(tab[0][0] == 'C' && tab[2][2] == '_' && checar('T', tab)==0){
 				tab[2][2] = 'T';
 				return;
 			}else{
-				if(tab[0][1] == '_' && checar('T', tab)==0){
+				if(tab[0][1] == '_' && checar('T', tab)==0 && tab[0][0] == 'C'){
 					tab[0][1] = 'T';
 					return;
 				}else{
-					if(checar('T', tab)==0){
+					if(checar('T', tab)==0 && tab[0][0] == 'C'){
 						tab[1][0] = 'T';
 						return;
 					}
@@ -635,11 +637,12 @@ void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 				tab[0][0] = 'T';
 				return;
 			}else{
-				if(tab[2][1] == '_' && checar('T', tab)==0){
+	
+	if(tab[2][1] == '_' && checar('T', tab)==0 && tab[2][2] == 'C'){
 					tab[2][1] = 'T';
 					return;
 				}else{
-					if(checar('T', tab)==0){
+					if(checar('T', tab)==0 && tab[2][2] == 'C'){
 						tab[1][2] = 'T';
 						return;
 					}
