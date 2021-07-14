@@ -463,7 +463,14 @@ int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 		if(vencedor(taba) == -1){
 			jogada[0].p1 = lances[i].p1;
 			jogada[0].p2 = lances[i].p2;
-			jogada[0].peca = lances[i].peca;
+			if(lances[i].peca == 'b')
+				jogada[0].peca = 'B';
+			if(lances[i].peca == 'c'){
+				jogada[0].peca = 'C';
+			}
+			if(lances[i].peca == 't'){
+				jogada[0].peca = 'T';
+			}
 			return(1);
 		}
 		else{
@@ -492,21 +499,21 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 	
 	k=0;
 	if(jogo==1){
-		for(i=0; i<3; i++){
-			for(j=0; j<3; j++){
-				if(checar('C', tab)==0){
+		if(checar('C', tab)==0){
+			for(i=0; i<3; i++){
+				for(j=0; j<3; j++){
 					lances[k].p1 = i;
 					
 					lances[k].p2 = j;
 					
 					lances[k].peca = 'C';
 					k++;
-				}
+				}	
 			}
 		}
-		for(i=0; i<3; i++){
-			for(j=0; j<3; j++){
-				if(checar('T', tab)==0){
+		if(checar('T', tab)==0){
+			for(i=0; i<3; i++){
+				for(j=0; j<3; j++){
 					lances[k].p1 = i;
 					
 					lances[k].p2 = j;
@@ -538,17 +545,27 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 			}
 		}
 	}
-	printTab(taba);
-	for(i=0;i<k;i++){
-		if(taba[lances[i].p1][lances[i].p2] == '_'){
-			taba[lances[i].p1][lances[i].p2] = lances[i].peca;
-			printTab(taba);
-		}
-		if(posvit2(taba, jogo, jogada)==1){
-			
-			return;
-		}
+	if(posvit2(taba, jogo, jogada)==1){
+		return;
 	}
+	// printTab(taba);
+	// for(i=0;i<k;i++){
+	// 	if(taba[lances[i].p1][lances[i].p2] == '_'){
+	// 		taba[lances[i].p1][lances[i].p2] = lances[i].peca;
+	// 		printTab(taba);
+	// 	}
+	// 	if(posvit2(taba, jogo, jogada)==1){
+			
+	// 		return;
+	// 	}
+	// 	else{
+	// 		for(l=0; l<3;l++){
+	// 			for(m=0; m<3; m++){
+	// 				taba[l][m]= tab[l][m];
+	// 			}
+	// 		}
+	// 	}
+	// }
 	do{
 		jogada[0].p1 = (rand() % 3);
 		jogada[0].p2 = (rand() % 3);
@@ -557,7 +574,7 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 		}else{
 			jogada[0].peca = 'T';
 		}
-	}while(tab[jogada[0].p1][jogada[0].p2] != '_');
+	}while(tab[jogada[0].p1][jogada[0].p2] != '_' && checar(jogada[0].peca, tab));
 	rec++;
 	return;
 }
@@ -586,37 +603,48 @@ void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 		if(i == 2){	
 			if(tab[0][1] != '_'){
 				tab[0][0] = 'C';
+				return;
 			}
 			if(tab[1][0] != '_'){
 				tab[0][0] = 'C';
+				return;
 			}
 			if(tab[1][2] !='_'){
 				tab[2][2] = 'C';
+				return;
 			}
 			if(tab[2][1] != '_'){
 				tab[2][2] = 'C';
+				return;
 			}
 		}
 		if(i == 4){
-			if(tab[0][0] == 'C' && tab[2][2] == '_'){
+			if(tab[0][0] == 'C' && tab[2][2] == '_' && checar('T', tab)==0){
 				tab[2][2] = 'T';
 				return;
 			}else{
-				if(tab[0][1] == '_'){
+				if(tab[0][1] == '_' && checar('T', tab)==0){
 					tab[0][1] = 'T';
 					return;
 				}else{
-					tab[1][0] = 'T';
-					return;
+					if(checar('T', tab)==0){
+						tab[1][0] = 'T';
+						return;
+					}
 				}
 			}
-			if(tab[2][2] == 'C' && tab[0][0] == '_'){
+			if(tab[2][2] == 'C' && tab[0][0] == '_' && checar('T', tab)==0){
 				tab[0][0] = 'T';
+				return;
 			}else{
-				if(tab[2][1] == '_'){
+				if(tab[2][1] == '_' && checar('T', tab)==0){
 					tab[2][1] = 'T';
+					return;
 				}else{
-					tab[1][2] = 'T';
+					if(checar('T', tab)==0){
+						tab[1][2] = 'T';
+						return;
+					}
 				}
 			}
 		}
