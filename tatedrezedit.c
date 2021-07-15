@@ -414,9 +414,47 @@ int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 	
 	k=0;
 	if(jogo==1){
+		if(checar('b', tab)==0){
+			for(i=0; i<3; i++){
+				for(j=0; j<3; j++){				
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 'b';
+					k++;
+				}
+			}
+		}
+		if(checar('c', tab)==0){
+			for(i=0; i<3; i++){
+				for(j=0; j<3; j++){
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 'c';
+					k++;
+				}
+			}
+		}
+		if(checar('t', tab)==0){
+			for(i=0; i<3; i++){
+				for(j=0; j<3; j++){
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 't';
+					k++;
+				}
+			}
+		}
+	}else{
+		printf("no posvit2 pegando jogo 2\n");
 		for(i=0; i<3; i++){
-			for(j=0; j<3; j++){
-				if(checar('b', tab)==0){
+			for(j=0; j<3; j++){		
+				if(taba[i][j] == '_' && checarlance(i, j, 'b', taba) == 0){		
 					lances[k].p1 = i;
 					
 					lances[k].p2 = j;
@@ -428,7 +466,7 @@ int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 		}
 		for(i=0; i<3; i++){
 			for(j=0; j<3; j++){
-				if(checar('c', tab)==0){
+				if(taba[i][j] == '_' && checarlance(i, j, 'c', taba) == 0){
 					lances[k].p1 = i;
 					
 					lances[k].p2 = j;
@@ -440,7 +478,7 @@ int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 		}
 		for(i=0; i<3; i++){
 			for(j=0; j<3; j++){
-				if(checar('t', tab)==0){
+				if(taba[i][j] == '_' && checarlance(i, j, 't', taba) == 0){
 					lances[k].p1 = i;
 					
 					lances[k].p2 = j;
@@ -461,16 +499,19 @@ int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 			printTab(taba);
 		}
 		if(vencedor(taba) == -1){
+			printf("entrou no if vencedor");
 			jogada[0].p1 = lances[i].p1;
 			jogada[0].p2 = lances[i].p2;
-			if(lances[i].peca == 'b')
-				jogada[0].peca = 'B';
-			if(lances[i].peca == 'c'){
-				jogada[0].peca = 'C';
-			}
-			if(lances[i].peca == 't'){
-				jogada[0].peca = 'T';
-			}
+			// if(jogo == 1){
+				if(checar('T', tab) == 0){
+					jogada[0].peca = 'T';
+					return(1);
+				}
+				if(checar('C', tab) == 0){
+					jogada[0].peca = 'C';
+					return(1);
+				}
+			// }
 			return(1);
 		}
 		else{
@@ -487,7 +528,7 @@ int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 
 void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 	
-	lanceC lances[18];
+	lanceC lances[27];
 	int i, j, k, l, m, rec = 0;
 	char taba[3][3];
 	srand(time(NULL));
@@ -523,6 +564,44 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 				}
 			}
 		}
+	}else{
+		printf("entrou no if do jogo 2 na lancepc");
+		for(i=0; i<3; i++){
+			for(j=0; j<3; j++){
+				if(taba[i][j] == '_' && checarlance(i, j, 'B', taba) == 0){
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 'B';
+					k++;
+				}
+			}	
+		}
+		for(i=0; i<3; i++){
+			for(j=0; j<3; j++){
+				if(taba[i][j] == '_' && checarlance(i, j, 'C', taba) == 0){
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 'C';
+					k++;
+				}
+			}	
+		}
+		for(i=0; i<3; i++){
+			for(j=0; j<3; j++){
+				if(taba[i][j] == '_' && checarlance(i, j, 'T', taba) == 0){
+				lances[k].p1 = i;
+				
+				lances[k].p2 = j;
+				
+				lances[k].peca = 'T';
+				k++;
+				}
+			}
+		}
 	}
 	// for (i=0; i<k; i++){
 	// 	printf("p1:  %d, p2:  %d, p3:  %c", lances[i].p1, lances[i].p2, lances[i].peca);
@@ -530,7 +609,7 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 	for(i=0;i<k;i++){
 		if(taba[lances[i].p1][lances[i].p2] == '_'){
 			taba[lances[i].p1][lances[i].p2] = lances[i].peca;
-			printTab(taba);
+			// printTab(taba);
 		}
 		if(vencedor(taba)==1){
 			jogada[0].p1 = lances[i].p1;
@@ -545,27 +624,10 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 			}
 		}
 	}
+	printf("antes de entrar na posvit2");
 	if(posvit2(taba, jogo, jogada)==1){
 		return;
 	}
-	// printTab(taba);
-	// for(i=0;i<k;i++){
-	// 	if(taba[lances[i].p1][lances[i].p2] == '_'){
-	// 		taba[lances[i].p1][lances[i].p2] = lances[i].peca;
-	// 		printTab(taba);
-	// 	}
-	// 	if(posvit2(taba, jogo, jogada)==1){
-			
-	// 		return;
-	// 	}
-	// 	else{
-	// 		for(l=0; l<3;l++){
-	// 			for(m=0; m<3; m++){
-	// 				taba[l][m]= tab[l][m];
-	// 			}
-	// 		}
-	// 	}
-	// }
 	do{
 		jogada[0].p1 = (rand() % 3);
 		jogada[0].p2 = (rand() % 3);
@@ -574,7 +636,7 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 		}else{
 			jogada[0].peca = 'T';
 		}
-	}while(tab[jogada[0].p1][jogada[0].p2] != '_' && checar(jogada[0].peca, tab));
+	}while(tab[jogada[0].p1][jogada[0].p2] != '_' || checar(jogada[0].peca, tab) != 0);
 	rec++;
 	return;
 }
@@ -582,25 +644,23 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 
 
 void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
-	
 	if(jogo == 1){
 		if(i == 0){
 			tab[1][1] = 'B';
 		}
-		if(i % 2 == 0){
-			if(tab[0][0] != '_' || tab[0][2] != '_' || tab[2][0] != '_' || tab[2][2] != '_' ){
-				printf("entrou no if\n");
+		if((tab[0][0] != '_' || tab[0][2] != '_' || tab[2][0] != '_' || tab[2][2] != '_') && i == 2 ){
+			lancepc(tab, jogo, jogada);
+			tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
+			jogada[0].p1 = 0;
+			return;
+		}
+		if(i == 2){
+			if(jogada[0].p1==0){
 				lancepc(tab, jogo, jogada);
-				printf("print embaixo de \n");
-				
-				printf("%d\n", jogada[0].p1);
-				printf("%d\n", jogada[0].p2);
-				printf("%c\n", jogada[0].peca);
 				tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
+				jogada[0].p1 = 0;
 				return;
 			}
-		}
-		if(i == 2){	
 			if(tab[0][1] != '_'){
 				tab[0][0] = 'C';
 				return;
@@ -619,15 +679,21 @@ void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 			}
 		}
 		if(i == 4){
+			if(jogada[0].p1==0){
+				lancepc(tab, jogo, jogada);
+				tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
+				jogada[0].p1 = 0;
+				return;
+			}
 			if(tab[0][0] == 'C' && tab[2][2] == '_' && checar('T', tab)==0){
 				tab[2][2] = 'T';
 				return;
 			}else{
-				if(tab[0][1] == '_' && checar('T', tab)==0){
+				if(tab[0][1] == '_' && checar('T', tab)==0 && tab[0][0] == 'C'){
 					tab[0][1] = 'T';
 					return;
 				}else{
-					if(checar('T', tab)==0){
+					if(checar('T', tab)==0 && tab[0][0] == 'C'){
 						tab[1][0] = 'T';
 						return;
 					}
@@ -637,11 +703,12 @@ void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 				tab[0][0] = 'T';
 				return;
 			}else{
-				if(tab[2][1] == '_' && checar('T', tab)==0){
+	
+				if(tab[2][1] == '_' && checar('T', tab)==0 && tab[2][2] == 'C'){
 					tab[2][1] = 'T';
 					return;
 				}else{
-					if(checar('T', tab)==0){
+					if(checar('T', tab)==0 && tab[2][2] == 'C'){
 						tab[1][2] = 'T';
 						return;
 					}
@@ -651,6 +718,12 @@ void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 	}else{
 		if(jogo == 2){
 			if(i == 0){
+				if(jogada[0].p1==0){
+					lancepc(tab, jogo, jogada);
+					tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
+					jogada[0].p1 = 0;
+					return;
+				}
 				if(tab[0][0] == 'C' && tab[0][1] == 'T' && tab[2][1] == '_'){
 					tab[2][1] = 'C';
 					tab[0][0] = '_';
@@ -685,6 +758,21 @@ void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 					tab[1][1] = '_';
 				}
 			}
+			if(i >= 2 && i % 2 == 0){
+				printf("segunda jogada xxxxxxxxxxxx");
+				if(jogada[0].p1==0){
+					printf("entrou no if");
+					do{
+						printf("entrou no do");
+						lancepc(tab, jogo, jogada);
+						printf("saiu da lance");
+					}while((jogada[0].p1!=1 && jogada[0].p1!=2 && jogada[0].p1!=3) || (jogada[0].p2!=1 && jogada[0].p2!=2 && jogada[0].p2!=3) || (jogada[0].peca != 'B' && jogada[0].peca != 'C' && jogada[0].peca != 'T')||(checarlance(jogada[0].p1, jogada[0].p2, jogada[0].peca, tab) != 0)||(tab[jogada[0].p1-1][jogada[0].p2-1] != '_') );
+				lance(jogada[0].p1, jogada[0].p2, jogada[0].peca, tab);
+				// tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
+				jogada[0].p1 = 0;
+				return;
+				}
+			}
 		}
 	}
 	return;
@@ -705,7 +793,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 					//le o lance de posicionamento do jogador 1
 					scanf(" %c  %c  %c", &p1, &p2, &peca);
 					
-					erros(vez, p1, p2, peca, tab, jogo);
+					
 					if(p1 == 'B' || p1 == 'C' || p1 == 'T'){
 						intermediario = peca;
 						peca = p1;
@@ -717,6 +805,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 						p1 = p1 - '0';
 						p2 = p2 - '0';
 					}
+					erros(vez, p1, p2, peca, tab, jogo);
 				/*nesse while eh checado se: 
 				a casa digitada nao existe, ou seja, se esta fora da faixa de 1 a 3 (que depois eh convertida para 0 a 2 para trabalhar com as matrizes);
 				se a peca nao existe ou nao eh do jogador da vez;
@@ -733,7 +822,6 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 				do{
 					scanf(" %c  %c  %c", &p1, &p2, &peca);
 						
-					erros(vez, p1, p2, peca, tab, jogo);
 					if(p1 == 'b' || p1 == 'c' || p1 == 't'){
 						intermediario = peca;
 						peca = p1;
@@ -745,6 +833,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 						p1 = p1 - '0';
 						p2 = p2 - '0';
 					}
+					erros(vez, p1, p2, peca, tab, jogo);
 				}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checar(peca, tab) != 0));
 				tab[p1-1][p2-1] = peca;
 				printTab(tab);
@@ -757,8 +846,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 				//exceto que eh usada a funcao checarlance ao inves da checar
 				do{
 					scanf(" %c  %c  %c", &p1, &p2, &peca);
-					
-					erros(vez, p1, p2, peca, tab, jogo);	
+						
 					if(p1 == 'B' || p1 == 'C' || p1 == 'T'){
 						intermediario = peca;
 						peca = p1;
@@ -770,7 +858,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 						p1 = p1 - '0';
 						p2 = p2 - '0';
 					}
-
+					erros(vez, p1, p2, peca, tab, jogo);
 				}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'B' && peca != 'C' && peca != 'T')||(checarlance(p1, p2, peca, tab) != 0)||(tab[p1-1][p2-1] != '_') );
 				lance(p1, p2, peca, tab);
 				printTab(tab);
@@ -779,8 +867,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 				
 				do{
 					scanf(" %c  %c  %c", &p1, &p2, &peca);
-							
-					erros(vez, p1, p2, peca, tab, jogo);	
+								
 					if(p1 == 'b' || p1 == 'c' || p1 == 't'){
 						intermediario = peca;
 						peca = p1;
@@ -792,6 +879,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 						p1 = p1 - '0';
 						p2 = p2 - '0';
 					}
+					erros(vez, p1, p2, peca, tab, jogo);
 				}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checarlance(p1, p2, peca, tab) != 0));
 				lance(p1, p2, peca, tab);
 				printTab(tab);	
@@ -807,7 +895,6 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 					do{
 						scanf(" %c  %c  %c", &p1, &p2, &peca);
 							
-						erros(vez, p1, p2, peca, tab, jogo);
 						if(p1 == 'b' || p1 == 'c' || p1 == 't'){
 							intermediario = peca;
 							peca = p1;
@@ -819,6 +906,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 							p1 = p1 - '0';
 							p2 = p2 - '0';
 						}
+						erros(vez, p1, p2, peca, tab, jogo);
 					}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checar(peca, tab) != 0));
 					tab[p1-1][p2-1] = peca;
 					printTab(tab);
@@ -830,8 +918,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 				}else{
 					do{
 						scanf(" %c  %c  %c", &p1, &p2, &peca);
-								
-						erros(vez, p1, p2, peca, tab, jogo);	
+									
 						if(p1 == 'b' || p1 == 'c' || p1 == 't'){
 							intermediario = peca;
 							peca = p1;
@@ -843,6 +930,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 							p1 = p1 - '0';
 							p2 = p2 - '0';
 						}
+						erros(vez, p1, p2, peca, tab, jogo);
 					}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checarlance(p1, p2, peca, tab) != 0));
 					lance(p1, p2, peca, tab);
 					printTab(tab);	
