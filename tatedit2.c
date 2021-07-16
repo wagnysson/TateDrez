@@ -774,54 +774,8 @@ void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 		}
 	}
 	else{
-		if(jogada[0].p1 != -1){
-			if(i == 0){
-				if(jogada[0].p1==0){
-					lancepc(tab, jogo, jogada);
-					tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
-					jogada[0].p1 = 0;
-					return;
-				}
-				if(tab[0][0] == 'C' && tab[0][1] == 'T' && tab[2][1] == '_'){
-					tab[2][1] = 'C';
-					tab[0][0] = '_';
-				}
-				if(tab[0][0] == 'C' && tab[0][1] == 'T' && tab[0][2] == '_'){
-					tab[0][2] = 'B';
-					tab[1][1] = '_';
-				}
-				if(tab[0][0] == 'C' && tab[1][0] == 'T' && tab[1][2] == '_'){
-					tab[1][2] = 'C';
-					tab[0][0] = '_';
-				}
-				if(tab[0][0] == 'C' && tab[1][0] == 'T' && tab[2][0] == '_'){
-					tab[2][0] = 'B';
-					tab[1][1] = '_';
-				}
-
-				if(tab[2][2] == 'C' && tab[2][1] == 'T' && tab[0][1] == '_'){
-					tab[0][1] = 'C';
-					tab[2][2] = '_';
-				}
-				if(tab[2][2] == 'C' && tab[1][2] == 'T' && tab[0][2] == '_'){
-					tab[0][2] = 'B';
-					tab[1][1] = '_';
-				}
-				if(tab[2][2] == 'C' && tab[1][2] == 'T' && tab[1][0] == '_'){
-					tab[1][0] = 'C';
-					tab[2][2] = '_';
-				}
-				if(tab[2][2] == 'C' && tab[2][1] == 'T' && tab[2][0] == '_'){
-					tab[2][0] = 'B';
-					tab[1][1] = '_';
-				}
-			}
-		}
-		else{
-			lancepc(tab, jogo, jogada);
-			lance(jogada[0].p1+1, jogada[0].p2+1, jogada[0].peca, tab);
-			jogada[0].p1 = -1;
-		}
+		lancepc(tab, jogo, jogada);
+		lance(jogada[0].p1+1, jogada[0].p2+1, jogada[0].peca, tab);
 	}
 	return;
 }
