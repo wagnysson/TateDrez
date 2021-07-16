@@ -496,7 +496,6 @@ int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 		for(i=0;i<k;i++){
 			if(taba[lances[i].p1][lances[i].p2] == '_'){
 				taba[lances[i].p1][lances[i].p2] = lances[i].peca;
-				printTab(taba);
 			}
 			if(vencedor(taba) == -1){
 				jogada[0].p1 = lances[i].p1;
@@ -545,8 +544,8 @@ int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 
 void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 	
-	lanceC lances[27];
-	int i, j, k, l, m, rec = 0;
+	lanceC lances[18], lancesBons[10];
+	int i, j, k, k2, l, m, flag, rec = 0;
 	char taba[3][3];
 	srand(time(NULL));
 	for(i=0; i<3;i++){
@@ -673,26 +672,35 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 				}
 			}
 		}
+		k2=0;
+		flag=0;
 		for(i=0; i<k; i++){
 			
 			lance(lances[i].p1 +1, lances[i].p2 +1, lances[i].peca, taba);
 			if(posvit2(taba, jogo, jogada)!=1){
-				jogada[0].p1 = lances[i].p1;
-				jogada[0].p2 = lances[i].p2;
-				jogada[0].peca = lances[i].peca;
-				return;
-			}else{
-				for(l=0; l<3;l++){
-					for(m=0; m<3; m++){
-						taba[l][m]= tab[l][m];
-					}
+				lancesBons[k2].p1 = lances[i].p1;
+				lancesBons[k2].p2 = lances[i].p2;
+				lancesBons[k2].peca = lances[i].peca;
+				k2++;
+				flag=1;
+			}
+			for(l=0; l<3;l++){
+				for(m=0; m<3; m++){
+					taba[l][m]= tab[l][m];
 				}
 			}
 		}
-		i= rand()%3;
+		if(flag==0){
+		i= rand()%k;
 		jogada[0].p1 = lances[i].p1;
 		jogada[0].p2 = lances[i].p2;
 		jogada[0].peca = lances[i].peca;
+		return;
+		}
+		i= rand()%k2;
+		jogada[0].p1 = lancesBons[i].p1;
+		jogada[0].p2 = lancesBons[i].p2;
+		jogada[0].peca = lancesBons[i].peca;
 		return;
 		
 	}
