@@ -1169,9 +1169,9 @@ int main(void){
 				}
 			}
 			//caso tenha um empate por falta de lance ou uma vitoria, i != 31
-			//entao o empate de s de mais so acontece se o for anterior acabar no i=31
+			//entao o empate de lances de mais so acontece se o for anterior acabar no i=31
 			if(i == 60){
-				printf("EMPATE: Ocorreram mais de 30 s e nao houve vitorias");
+				printf("EMPATE: Ocorreram mais de 30 lances e nao houve vitorias");
 			}
 		}
     }
