@@ -723,12 +723,13 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 	}
 }
 
-//faz as jogadas do computador
+//faz as jogadas do computador e printa na tela a jogada feita
 void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 	if(jogo == 1){
         //se estiver na fase de posicionamentos com primeira jogada coloca o Bispo branco na casa do meio do tabuleiro
 		if(i == 0){
 			tab[1][1] = 'B';
+			printf("%d %d %c\n", 2, 2, 'B');
             return;
 		}
         //na fase de posicionamentos se for a segunda jogada do computador ele verifica se tem alguma peca nos cantos, se tiver ele verifica qual a melhor jogada
@@ -738,24 +739,29 @@ void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 			if((tab[0][0] != '_' || tab[0][2] != '_' || tab[2][0] != '_' || tab[2][2] != '_')){
                 lancepc(tab, jogo, jogada);
                 tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
+				printf("%d %d %c\n", jogada[0].p1+1, jogada[0].p2+1, jogada[0].peca);
                 jogada[0].p1 = -1;// essa variavel eh usada como flag para checar depois se o computador joga pela lancepc ou pelo algoritmo pronto
                 return;
 		    }
 			//caso o oponente nao tenha colocado uma peca no canto, coloca-se um cavalo em um canto do lado da peca do oponente
 			if(tab[0][1] != '_'){
 				tab[0][0] = 'C';
+				printf("%d %d %c\n", 1, 1, 'C');
 				return;
 			}
 			if(tab[1][0] != '_'){
 				tab[0][0] = 'C';
+				printf("%d %d %c\n", 1, 1, 'C');
 				return;
 			}
 			if(tab[1][2] !='_'){
 				tab[2][2] = 'C';
+				printf("%d %d %c\n", 3, 3, 'C');
 				return;
 			}
 			if(tab[2][1] != '_'){
 				tab[2][2] = 'C';
+				printf("%d %d %c\n", 3, 3, 'C');
 				return;
 			}
 		}
@@ -764,34 +770,41 @@ void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 			if(jogada[0].p1==-1){
 				lancepc(tab, jogo, jogada);
 				tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
+				printf("%d %d %c\n", jogada[0].p1+1, jogada[0].p2+1, jogada[0].peca);
 				jogada[0].p1 = -1;
 				return;
 			}
 			if(tab[0][0] == 'C' && tab[2][2] == '_' && checar('T', tab)==0){
 				tab[2][2] = 'T';
+				printf("%d %d %c\n", 3, 3, 'T');
 				return;
 			}else{
 				if(tab[0][1] == '_' && checar('T', tab)==0 && tab[0][0] == 'C'){
 					tab[0][1] = 'T';
+					printf("%d %d %c\n", 1, 2, 'T');
 					return;
 				}else{
 					if(checar('T', tab)==0 && tab[0][0] == 'C'){
 						tab[1][0] = 'T';
+						printf("%d %d %c\n", 2, 1, 'T');
 						return;
 					}
 				}
 			}
 			if(tab[2][2] == 'C' && tab[0][0] == '_' && checar('T', tab)==0){
 				tab[0][0] = 'T';
+				printf("%d %d %c\n", 1, 1, 'T');
 				return;
 			}else{
 	
 				if(tab[2][1] == '_' && checar('T', tab)==0 && tab[2][2] == 'C'){
 					tab[2][1] = 'T';
+					printf("%d %d %c\n", 3, 2, 'T');
 					return;
 				}else{
 					if(checar('T', tab)==0 && tab[2][2] == 'C'){
 						tab[1][2] = 'T';
+						printf("%d %d %c\n", 2, 3, 'T');
 						return;
 					}
 				}
@@ -803,6 +816,7 @@ void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
         //na fase de mover pecas eh feita a verificacao das melhores jogadas possiveis na funcao lancepc e depois eh feito o lance com a jogada obtida
 		lancepc(tab, jogo, jogada);
 		lance(jogada[0].p1+1, jogada[0].p2+1, jogada[0].peca, tab);
+		printf("%d %d %c\n", jogada[0].p1+1, jogada[0].p2+1, jogada[0].peca);
 	}
 	return;
 }
