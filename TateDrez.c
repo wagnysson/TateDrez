@@ -5,7 +5,9 @@
 #include <math.h> //usada para funcao pow e sqrt
 #include <stdlib.h> //usada para a funcao abs
 #include <string.h> //usada para a funcao strcmp
+#include <time.h>//usada para o funcionamento correto da funcao random()
 
+//struct que guarda informacoes que serao usadas nas funcoes de lances do computador
 typedef struct{
 	int p1;
 	int p2;
@@ -75,7 +77,7 @@ int checar(char peca, char tab[3][3]){
 	return(flag);
 }	
 
-// confere se alguem venceu. se a flag = 1 entao o jogador 1 venceu, se flag = 2 o jogador 2 venceu
+// confere se alguem venceu. se a flag = 1 entao o jogador 1 venceu, se flag = -1 o jogador 2 venceu
 int vencedor(char tab[3][3]){
 	int i;//contador
 	int flag = 0; // variavel flag que indica o que foi citado no comentario explicando a funcao
@@ -400,22 +402,64 @@ int empate2(char tab[3][3]){
 	return(flag);
 }
 
-int posvit2(char tab[3][3], int jogo){
-	char taba[3][3];
-	lanceC lances[27];
-	int i, j, k;
+//checa as jogadas possiveis do jogador 2 no modo de jogo jogador vs computador, guarda a jogada com que o jogador 2 venceria se for possivel e retorna 1 se o jogador 2 venceria com essa jogada e 0 se ele nao tem como vencer
+int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
+	char taba[3][3];//tabuleiro de analise, os testes de jogadas possiveis serao feitos nele
+	lanceC lances[27];//guarda os lances possiveis de serem feitos
+	int i, j, k, l, m;//contadores
 	
+    //tabela de analise recebe o estado atual da tabela do jogo
 	for(i=0; i<3;i++){
 		for(j=0; j<3; j++){
-			taba[i][j]= tab[i][j];
+			taba[i][j] = tab[i][j];
 		}
 	}
 	
+	//k inicia com 0 porque contara a quantidade de jogadas que o vetor lances vai conter
 	k=0;
+    //se o jogo estiver na fase de posicionamento sao guardados as posicoes (coordenadas p1 e p2 da casa e a peca) possiveis de cada peca do jogador no vetor lances, isto caso ela nao esteja no tabuleiro ainda	
 	if(jogo==1){
+		if(checar('b', tab)==0){
+			for(i=0; i<3; i++){
+				for(j=0; j<3; j++){				
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 'b';
+					k++;
+				}
+			}
+		}
+		if(checar('c', tab)==0){
+			for(i=0; i<3; i++){
+				for(j=0; j<3; j++){
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 'c';
+					k++;
+				}
+			}
+		}
+		if(checar('t', tab)==0){
+			for(i=0; i<3; i++){
+				for(j=0; j<3; j++){
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 't';
+					k++;
+				}
+			}
+		}
+	}else{
+        //se o jogo estiver na fase de movimentar pecas sao guardados os lances possiveis de cada peca do jogador no vetor lances
 		for(i=0; i<3; i++){
-			for(j=0; j<3; j++){
-				if(checar('b', tab)==0){
+			for(j=0; j<3; j++){		
+				if(tab[i][j] == '_' && checarlance(i+1, j+1, 'b', tab) == 0){		
 					lances[k].p1 = i;
 					
 					lances[k].p2 = j;
@@ -427,7 +471,7 @@ int posvit2(char tab[3][3], int jogo){
 		}
 		for(i=0; i<3; i++){
 			for(j=0; j<3; j++){
-				if(checar('c', tab)==0){
+				if(tab[i][j] == '_' && checarlance(i+1, j+1, 'c', tab) == 0){
 					lances[k].p1 = i;
 					
 					lances[k].p2 = j;
@@ -439,7 +483,7 @@ int posvit2(char tab[3][3], int jogo){
 		}
 		for(i=0; i<3; i++){
 			for(j=0; j<3; j++){
-				if(checar('t', tab)==0){
+				if(tab[i][j] == '_' && checarlance(i+1, j+1, 't', tab) == 0){
 					lances[k].p1 = i;
 					
 					lances[k].p2 = j;
@@ -450,15 +494,51 @@ int posvit2(char tab[3][3], int jogo){
 			}
 		}
 	}
-	for(i=0;i<k;i++){
-		lance(lances[i].p1+1, lances[i].p2+1, lances[i].peca, taba);
-		if(vencedor(taba)== -1){
-			return (1);
+    //se estiver na fase de posicionamento as jogadas guardadas no vetor lances sao feitas quando possivel
+	if(jogo==1){
+		for(i=0;i<k;i++){
+			if(taba[lances[i].p1][lances[i].p2] == '_'){
+				taba[lances[i].p1][lances[i].p2] = lances[i].peca;
+			}
+            //depois que a jogada eh feita, eh verificado se o jogador venceu, se sim, a jogada eh guardada no vetor jogada e a funcao retorna 1
+			if(vencedor(taba) == -1){
+				jogada[0].p1 = lances[i].p1;
+				jogada[0].p2 = lances[i].p2;
+                //verifica se a torre ou o cavalo do computador jah estao no tabuleiro, se um dos dois ainda nao estiver, entao eh colocado na posicao em que o jogador ganharia para evitar que o computador perca
+                if(checar('T', tab) == 0){
+                    jogada[0].peca = 'T';
+                    return(1);
+                }
+                if(checar('C', tab) == 0){
+                    jogada[0].peca = 'C';
+                    return(1);
+                }
+				return(1);
+			}
+			else{
+                //se o jogador nao venceu, entao o tabuleiro volta para o estado anterior e outra jogada ou posicionamento eh testado
+				for(l=0; l<3;l++){
+					for(m=0; m<3; m++){
+						taba[l][m]= tab[l][m];
+					}
+				}
+			}
 		}
-		else{
-			for(i=0; i<3;i++){
-				for(j=0; j<3; j++){
-					taba[i][j]= tab[i][j];
+        //caso o jogador nao venca de forma alguma na rodada, a funcao retorna 0 
+		return(0);
+	}
+	else{
+        //se for a fase de movimentar pecas os lances guardados no vetor lances sao feitos
+		for(i=0;i<k;i++){
+			lance(lances[i].p1 +1, lances[i].p2 +1, lances[i].peca, taba);
+			if(vencedor(taba) == -1){
+				return(1);
+			}
+			else{
+				for(l=0; l<3;l++){
+					for(m=0; m<3; m++){
+						taba[l][m]= tab[l][m];
+					}
 				}
 			}
 		}
@@ -467,47 +547,39 @@ int posvit2(char tab[3][3], int jogo){
 	
 }
 
+//verifica as jogadas possiveis do computador e guarda a melhor possivel no vetor jogada, se nao der para fazer a melhor jogada entao guarda uma jogada aleatoria no vetor jogada
 void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 	
-	lanceC lances[27];
-	int i, j, k;
-	char taba[3][3];
-	
+	lanceC lances[18], lancesBons[10];//vetor que guarda os lances
+	int i, j, k, k2, l, m, flag;//contadores
+	char taba[3][3];//tabela de analise, analoga a da funcao posvit2
+	//define a seed da funcao rand() usando o horario no momento de execucao
+    srand(time(NULL));
+    //tabela de analise recebe o estado atual do tabuleiro	
 	for(i=0; i<3;i++){
 		for(j=0; j<3; j++){
 			taba[i][j]= tab[i][j];
 		}
 	}
-	
+	//k conta quantas jogadas o vetor lances vai guardar
 	k=0;
+    //se o jogo estiver na fase de posicionamentos, sao guardados os posicionamentos possiveis do cavalo e da torre caso eles nao estejam no tabuleiro ainda, ja que o bispo sempre eh a primeira jogada do computador
 	if(jogo==1){
-		for(i=0; i<3; i++){
-			for(j=0; j<3; j++){
-				if(checar('B', tab)==0){
-					lances[k].p1 = i;
-					
-					lances[k].p2 = j;
-					
-					lances[k].peca = 'B';
-					k++;
-				}
-			}
-		}
-		for(i=0; i<3; i++){
-			for(j=0; j<3; j++){
-				if(checar('C', tab)==0){
+		if(checar('C', tab)==0){
+			for(i=0; i<3; i++){
+				for(j=0; j<3; j++){
 					lances[k].p1 = i;
 					
 					lances[k].p2 = j;
 					
 					lances[k].peca = 'C';
 					k++;
-				}
+				}	
 			}
 		}
-		for(i=0; i<3; i++){
-			for(j=0; j<3; j++){
-				if(checar('T', tab)==0){
+		if(checar('T', tab)==0){
+			for(i=0; i<3; i++){
+				for(j=0; j<3; j++){
 					lances[k].p1 = i;
 					
 					lances[k].p2 = j;
@@ -517,140 +589,212 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 				}
 			}
 		}
-	}
-	for(i=0;i<k;i++){
-		lance(lances[i].p1+1, lances[i].p2+1, lances[i].peca, taba);
-		if(vencedor(taba)==1){
-			jogada[0].p1 = lances[i].p1;
-			jogada[0].p2 = lances[i].p2;
-			jogada[0].peca = lances[i].peca;
-			return;
+	}else{
+        //se estiver na fase de movimentar pecas, entao sao guardados os lances possiveis para as 3 pecas do computador
+		for(i=0; i<3; i++){
+			for(j=0; j<3; j++){
+				if(tab[i][j] == '_' && checarlance(i+1, j+1, 'B', tab) == 0){
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 'B';
+					k++;
+				}
+			}	
 		}
-		else{
-			for(i=0; i<3;i++){
-				for(j=0; j<3; j++){
-					taba[i][j]= tab[i][j];
+		for(i=0; i<3; i++){
+			for(j=0; j<3; j++){
+				if(tab[i][j] == '_' && checarlance(i+1, j+1, 'C', tab) == 0){
+					lances[k].p1 = i;
+					
+					lances[k].p2 = j;
+					
+					lances[k].peca = 'C';
+					k++;
+				}
+			}	
+		}
+		for(i=0; i<3; i++){
+			for(j=0; j<3; j++){
+				if(tab[i][j] == '_' && checarlance(i+1, j+1, 'T', tab) == 0){
+				lances[k].p1 = i;
+				
+				lances[k].p2 = j;
+				
+				lances[k].peca = 'T';
+				k++;
 				}
 			}
 		}
 	}
-	for(i=0; i<k; i++){
-		lance(lances[i].p1+1, lances[i].p2+1, lances[i].peca, taba);
-		if(posvit2(taba, jogo)!=1){
-			jogada[0].p1 = lances[i].p1;
-			jogada[0].p2 = lances[i].p2;
-			jogada[0].peca = lances[i].peca;
+
+	if(jogo==1){
+		for(i=0;i<k;i++){
+			if(taba[lances[i].p1][lances[i].p2] == '_'){
+                //faz os lances guardados no vetor lances na tabela de analise
+				taba[lances[i].p1][lances[i].p2] = lances[i].peca;
+			}
+            //verifica se o computador venceu com o lance feito, se sim, retorna o lance dentro do vetor jogada
+			if(vencedor(taba)==1){
+				jogada[0].p1 = lances[i].p1;
+				jogada[0].p2 = lances[i].p2;
+				jogada[0].peca = lances[i].peca;
+				return;
+			}else{
+                //se nao venceu, volta o tabuleiro de analise para o estado anterior e testa a proxima jogada
+				for(l=0; l<3;l++){
+					for(m=0; m<3; m++){
+						taba[l][m]= tab[l][m];
+					}
+				}
+			}
+		}
+        //verifica as jogadas do jogador, caso ele possa vencer com alguma jogada, essa jogada eh guardada e o computador tenta colocar uma peca nessa casa de modo a impedir o jogador de ganhar
+		if(posvit2(taba, jogo, jogada)==1){
 			return;
 		}
+        //caso nao haja jogada que venca para que os testes acima gerem jogadas, eh feita uma jogada aleatoria
+		do{
+			jogada[0].p1 = (rand() % 3);
+			jogada[0].p2 = (rand() % 3);
+			if((rand() % 2)==0){
+				jogada[0].peca = 'C';
+			}else{
+				jogada[0].peca = 'T';
+			}
+		}while(tab[jogada[0].p1][jogada[0].p2] != '_' || checar(jogada[0].peca, tab) != 0);
+		return;
 	}
-	
-	jogada[0].p1 = lances[0].p1;
-	jogada[0].p2 = lances[0].p2;
-	jogada[0].peca = lances[0].peca;
-	
-	return;
+	else{
+        //se estiver na fase de movimentar pecas as jogadas guardadas no vetor lances sao testadas e se com alguma delas o computador vencer, ela eh guardada no vetor jogada e a funcao se encerra
+		for(i=0;i<k;i++){
+			lance(lances[i].p1 +1, lances[i].p2 +1, lances[i].peca, taba);
+			
+			if(vencedor(taba)==1){
+				jogada[0].p1 = lances[i].p1;
+				jogada[0].p2 = lances[i].p2;
+				jogada[0].peca = lances[i].peca;
+				return;
+			}else{
+				for(l=0; l<3;l++){
+					for(m=0; m<3; m++){
+						taba[l][m]= tab[l][m];
+					}
+				}
+			}
+		}
+		k2=0;
+		flag=0;
+		for(i=0; i<k; i++){
+			
+			lance(lances[i].p1 +1, lances[i].p2 +1, lances[i].peca, taba);
+			if(posvit2(taba, jogo, jogada)!=1){
+				lancesBons[k2].p1 = lances[i].p1;
+				lancesBons[k2].p2 = lances[i].p2;
+				lancesBons[k2].peca = lances[i].peca;
+				k2++;
+				flag=1;
+			}
+			for(l=0; l<3;l++){
+				for(m=0; m<3; m++){
+					taba[l][m]= tab[l][m];
+				}
+			}
+		}
+		if(flag==0){
+		i= rand()%k;
+		jogada[0].p1 = lances[i].p1;
+		jogada[0].p2 = lances[i].p2;
+		jogada[0].peca = lances[i].peca;
+		return;
+		}
+		i= rand()%k2;
+		jogada[0].p1 = lancesBons[i].p1;
+		jogada[0].p2 = lancesBons[i].p2;
+		jogada[0].peca = lancesBons[i].peca;
+		return;
+		
+	}
 }
 
-
-
+//faz as jogadas do computador
 void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
-	
-	char p1, p2, peca;
-	
 	if(jogo == 1){
+        //se estiver na fase de posicionamentos com primeira jogada coloca o Bispo branco na casa do meio do tabuleiro
 		if(i == 0){
 			tab[1][1] = 'B';
+            return;
 		}
+        //na fase de posicionamentos se for a segunda jogada do computador ele verifica se tem alguma peca nos cantos, se tiver ele verifica qual a melhor jogada
+        //jah que se as pecas estiverem exatamente em cima, embaixo, a esquerda ou a direita do Bispo branco jah ha um algoritmo pronto pra o computador vencer
+        //que eh justamente o que vem logo abaixo 
 		if(i == 2){
-			if(tab[0][0] != '_' || tab[0][2] != '_' || tab[2][0] != '_' || tab[2][2] != '_' ){
-				printf("entrou no if\n");
-				lancepc(tab, jogo, jogada);
-				printf("print embaixo de \n");
-				p1 = jogada[0].p1;
-				p2 = jogada[0].p2;
-				peca = jogada[0].peca;
-				
-				printf("%d\n", p1);
-				printf("%d\n", p2);
-				printf("%c\n", peca);
-				
-				lance(p1, p2, peca, tab);
-				return;
-			}
+			if((tab[0][0] != '_' || tab[0][2] != '_' || tab[2][0] != '_' || tab[2][2] != '_')){
+                lancepc(tab, jogo, jogada);
+                tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
+                jogada[0].p1 = -1;
+                return;
+		    }
 			if(tab[0][1] != '_'){
 				tab[0][0] = 'C';
+				return;
 			}
 			if(tab[1][0] != '_'){
 				tab[0][0] = 'C';
+				return;
 			}
 			if(tab[1][2] !='_'){
 				tab[2][2] = 'C';
+				return;
 			}
 			if(tab[2][1] != '_'){
 				tab[2][2] = 'C';
+				return;
 			}
 		}
+        //no terceiro posicionamento do computador ele verifica se entrou no fluxo das pecas do canto, se sim, ele executa o primeiro if, se nao entao eh o fluxo da peca exatamente a direita/esquerda/abaixo/acima do bispo branco
 		if(i == 4){
-			if(tab[0][0] == 'C' && tab[2][2] == '_'){
+			if(jogada[0].p1==-1){
+				lancepc(tab, jogo, jogada);
+				tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
+				jogada[0].p1 = -1;
+				return;
+			}
+			if(tab[0][0] == 'C' && tab[2][2] == '_' && checar('T', tab)==0){
 				tab[2][2] = 'T';
 				return;
 			}else{
-				if(tab[0][1] == '_'){
+				if(tab[0][1] == '_' && checar('T', tab)==0 && tab[0][0] == 'C'){
 					tab[0][1] = 'T';
 					return;
 				}else{
-					tab[1][0] = 'T';
-					return;
+					if(checar('T', tab)==0 && tab[0][0] == 'C'){
+						tab[1][0] = 'T';
+						return;
+					}
 				}
 			}
-			if(tab[2][2] == 'C' && tab[0][0] == '_'){
+			if(tab[2][2] == 'C' && tab[0][0] == '_' && checar('T', tab)==0){
 				tab[0][0] = 'T';
+				return;
 			}else{
-				if(tab[2][1] == '_'){
+	
+				if(tab[2][1] == '_' && checar('T', tab)==0 && tab[2][2] == 'C'){
 					tab[2][1] = 'T';
+					return;
 				}else{
-					tab[1][2] = 'T';
+					if(checar('T', tab)==0 && tab[2][2] == 'C'){
+						tab[1][2] = 'T';
+						return;
+					}
 				}
 			}
 		}
 	}else{
-		if(jogo == 2){
-			if(i == 0){
-				if(tab[0][0] == 'C' && tab[0][1] == 'T' && tab[2][1] == '_'){
-					tab[2][1] = 'C';
-					tab[0][0] = '_';
-				}
-				if(tab[0][0] == 'C' && tab[0][1] == 'T' && tab[0][2] == '_'){
-					tab[0][2] = 'B';
-					tab[1][1] = '_';
-				}
-				if(tab[0][0] == 'C' && tab[1][0] == 'T' && tab[1][2] == '_'){
-					tab[1][2] = 'C';
-					tab[0][0] = '_';
-				}
-				if(tab[0][0] == 'C' && tab[1][0] == 'T' && tab[2][0] == '_'){
-					tab[2][0] = 'B';
-					tab[1][1] = '_';
-				}
-
-				if(tab[2][2] == 'C' && tab[2][1] == 'T' && tab[0][1] == '_'){
-					tab[0][1] = 'C';
-					tab[2][2] = '_';
-				}
-				if(tab[2][2] == 'C' && tab[1][2] == 'T' && tab[0][2] == '_'){
-					tab[0][2] = 'B';
-					tab[1][1] = '_';
-				}
-				if(tab[2][2] == 'C' && tab[1][2] == 'T' && tab[1][0] == '_'){
-					tab[1][0] = 'C';
-					tab[2][2] = '_';
-				}
-				if(tab[2][2] == 'C' && tab[2][1] == 'T' && tab[2][0] == '_'){
-					tab[2][0] = 'B';
-					tab[1][1] = '_';
-				}
-			}
-		}
+        //na fase de mover pecas eh feita a verificacao das melhores jogadas possiveis na funcao lancepc e depois eh feito o lance com a jogada obtida
+		lancepc(tab, jogo, jogada);
+		lance(jogada[0].p1+1, jogada[0].p2+1, jogada[0].peca, tab);
 	}
 	return;
 }
@@ -670,7 +814,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 					//le o lance de posicionamento do jogador 1
 					scanf(" %c  %c  %c", &p1, &p2, &peca);
 					
-					erros(vez, p1, p2, peca, tab, jogo);
+					
 					if(p1 == 'B' || p1 == 'C' || p1 == 'T'){
 						intermediario = peca;
 						peca = p1;
@@ -682,6 +826,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 						p1 = p1 - '0';
 						p2 = p2 - '0';
 					}
+					erros(vez, p1, p2, peca, tab, jogo);
 				/*nesse while eh checado se: 
 				a casa digitada nao existe, ou seja, se esta fora da faixa de 1 a 3 (que depois eh convertida para 0 a 2 para trabalhar com as matrizes);
 				se a peca nao existe ou nao eh do jogador da vez;
@@ -698,7 +843,6 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 				do{
 					scanf(" %c  %c  %c", &p1, &p2, &peca);
 						
-					erros(vez, p1, p2, peca, tab, jogo);
 					if(p1 == 'b' || p1 == 'c' || p1 == 't'){
 						intermediario = peca;
 						peca = p1;
@@ -710,6 +854,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 						p1 = p1 - '0';
 						p2 = p2 - '0';
 					}
+					erros(vez, p1, p2, peca, tab, jogo);
 				}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checar(peca, tab) != 0));
 				tab[p1-1][p2-1] = peca;
 				printTab(tab);
@@ -722,8 +867,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 				//exceto que eh usada a funcao checarlance ao inves da checar
 				do{
 					scanf(" %c  %c  %c", &p1, &p2, &peca);
-					
-					erros(vez, p1, p2, peca, tab, jogo);	
+						
 					if(p1 == 'B' || p1 == 'C' || p1 == 'T'){
 						intermediario = peca;
 						peca = p1;
@@ -735,7 +879,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 						p1 = p1 - '0';
 						p2 = p2 - '0';
 					}
-
+					erros(vez, p1, p2, peca, tab, jogo);
 				}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'B' && peca != 'C' && peca != 'T')||(checarlance(p1, p2, peca, tab) != 0)||(tab[p1-1][p2-1] != '_') );
 				lance(p1, p2, peca, tab);
 				printTab(tab);
@@ -744,8 +888,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 				
 				do{
 					scanf(" %c  %c  %c", &p1, &p2, &peca);
-							
-					erros(vez, p1, p2, peca, tab, jogo);	
+								
 					if(p1 == 'b' || p1 == 'c' || p1 == 't'){
 						intermediario = peca;
 						peca = p1;
@@ -757,6 +900,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 						p1 = p1 - '0';
 						p2 = p2 - '0';
 					}
+					erros(vez, p1, p2, peca, tab, jogo);
 				}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checarlance(p1, p2, peca, tab) != 0));
 				lance(p1, p2, peca, tab);
 				printTab(tab);	
@@ -772,7 +916,6 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 					do{
 						scanf(" %c  %c  %c", &p1, &p2, &peca);
 							
-						erros(vez, p1, p2, peca, tab, jogo);
 						if(p1 == 'b' || p1 == 'c' || p1 == 't'){
 							intermediario = peca;
 							peca = p1;
@@ -784,6 +927,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 							p1 = p1 - '0';
 							p2 = p2 - '0';
 						}
+						erros(vez, p1, p2, peca, tab, jogo);
 					}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checar(peca, tab) != 0));
 					tab[p1-1][p2-1] = peca;
 					printTab(tab);
@@ -795,8 +939,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 				}else{
 					do{
 						scanf(" %c  %c  %c", &p1, &p2, &peca);
-								
-						erros(vez, p1, p2, peca, tab, jogo);	
+									
 						if(p1 == 'b' || p1 == 'c' || p1 == 't'){
 							intermediario = peca;
 							peca = p1;
@@ -808,6 +951,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 							p1 = p1 - '0';
 							p2 = p2 - '0';
 						}
+						erros(vez, p1, p2, peca, tab, jogo);
 					}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checarlance(p1, p2, peca, tab) != 0));
 					lance(p1, p2, peca, tab);
 					printTab(tab);	
