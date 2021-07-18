@@ -5,7 +5,7 @@
 #include <math.h> //usada para funcao pow e sqrt
 #include <stdlib.h> //usada para a funcao abs
 #include <string.h> //usada para a funcao strcmp
-#include <time.h>//usada para o funcionamento correto da funcao random()
+#include <time.h>//usada para o funcionamento correto da funcao rand()
 
 //struct que guarda informacoes que serao usadas nas funcoes de lances do computador
 typedef struct{
@@ -18,7 +18,7 @@ typedef struct{
 void info(void){
 	printf("Bem vindos ao TateDrez!\n\n");
 	printf("COMO JOGAR?\nO jogo pode ser dividido em 2 fases, a FASE DE POSICIONAMENTO e a FASE DE MOVIMENTAR PECAS nas quais os jogadores realizam LANCES.\n\n");
-	printf("LANCE - Para fazer um lance o jogador da vez digita um comando no formato 'p1 p2 peca', onde p1 eh o numero da linha e p2 o da coluna do tabuleiro (para) onde o jogador deseja posicionar/movimentar a peca que eh definida pelo terceiro item do comando (peca).\n");
+	printf("LANCE - Para fazer um lance o jogador da vez digita um comando no formato 'p1 p2 peca' ou 'peca p1 p2', onde p1 eh o numero da linha e p2 o da coluna do tabuleiro (para) onde o jogador deseja posicionar/movimentar a peca que eh definida pelo terceiro item do comando (peca).\n");
 	printf("RESTRICAO DOS VALORES\n1<=p1<=3\n1<=p2<=3\n");
 	printf("O jogador 1 joga apenas com as pecas brancas (de letra maiuscula) e o jogador 2 joga apenas com as pecas pretas (de letra minuscula) sendo elas:\n");
 	printf("C, c - CAVALO\nB, b - BISPO\nT, t - TORRE\n\n");
@@ -402,7 +402,7 @@ int empate2(char tab[3][3]){
 	return(flag);
 }
 
-//checa as jogadas possiveis do jogador 2 no modo de jogo jogador vs computador, guarda a jogada com que o jogador 2 venceria se for possivel e retorna 1 se o jogador 2 venceria com essa jogada e 0 se ele nao tem como vencer
+//checa as jogadas possiveis do jogador 2 no modo de jogo jogador vs computador, guarda a jogada com que o jogador 2 venceria se for possivel(na primeira fase de jogo) e retorna 1 se o jogador 2 venceria com essa jogada e 0 se ele nao tem como vencer
 int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 	char taba[3][3];//tabuleiro de analise, os testes de jogadas possiveis serao feitos nele
 	lanceC lances[27];//guarda os lances possiveis de serem feitos
@@ -417,7 +417,7 @@ int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 	
 	//k inicia com 0 porque contara a quantidade de jogadas que o vetor lances vai conter
 	k=0;
-    //se o jogo estiver na fase de posicionamento sao guardados as posicoes (coordenadas p1 e p2 da casa e a peca) possiveis de cada peca do jogador no vetor lances, isto caso ela nao esteja no tabuleiro ainda	
+    //se o jogo estiver na fase de posicionamento sao guardadas as posicoes (coordenadas p1 e p2 da casa e a peca) possiveis de serem colocadas cada peca do jogador no vetor lances, isto caso ela nao esteja no tabuleiro ainda	
 	if(jogo==1){
 		if(checar('b', tab)==0){
 			for(i=0; i<3; i++){
@@ -528,7 +528,7 @@ int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 		return(0);
 	}
 	else{
-        //se for a fase de movimentar pecas os lances guardados no vetor lances sao feitos
+        //se for a fase de movimentar pecas os lances guardados no vetor lances sao feitos e eh verificado se o jogador venceu, se venceu, retorna o valor 1
 		for(i=0;i<k;i++){
 			lance(lances[i].p1 +1, lances[i].p2 +1, lances[i].peca, taba);
 			if(vencedor(taba) == -1){
@@ -550,8 +550,8 @@ int posvit2(char tab[3][3], int jogo, lanceC jogada[1]){
 //verifica as jogadas possiveis do computador e guarda a melhor possivel no vetor jogada, se nao der para fazer a melhor jogada entao guarda uma jogada aleatoria no vetor jogada
 void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 	
-	lanceC lances[18], lancesBons[10];//vetor que guarda os lances
-	int i, j, k, k2, l, m, flag;//contadores
+	lanceC lances[18], lancesBons[10];//vetores que guardam os lances
+	int i, j, k, k2, l, m;//contadores
 	char taba[3][3];//tabela de analise, analoga a da funcao posvit2
 	//define a seed da funcao rand() usando o horario no momento de execucao
     srand(time(NULL));
@@ -684,31 +684,36 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 				}
 			}
 		}
-		k2=0;
-		flag=0;
+		k2=0; //o contador do numero de lances que impedem vitoria eh colocado como 0
 		for(i=0; i<k; i++){
 			
+			//cada lance possivel eh realizado em taba
 			lance(lances[i].p1 +1, lances[i].p2 +1, lances[i].peca, taba);
+			//se ao realizar esse lance o oponente nao tem como ganhar imediatamente, guarda-se esse lance no vetor lancesBons e adiciona-se 1 a k2
 			if(posvit2(taba, jogo, jogada)!=1){
 				lancesBons[k2].p1 = lances[i].p1;
 				lancesBons[k2].p2 = lances[i].p2;
 				lancesBons[k2].peca = lances[i].peca;
 				k2++;
-				flag=1;
 			}
+			//depois do lance ser analisado, o tabuleiro de analise volta a ser igual ao tabuleiro que entrou na funcao
 			for(l=0; l<3;l++){
 				for(m=0; m<3; m++){
 					taba[l][m]= tab[l][m];
 				}
 			}
 		}
-		if(flag==0){
+		//ao final dessa repeticao, todos os lances que nao levam a uma derrota imediata estarao armazenados em lancesBons
+		
+		//se k2 eh menor que 1, nao foi encontrado nenhum lance que impede derrota imediata, entao eh jogado um lance aleatorio dentre os disponiveis
+		if(k2<1){
 		i= rand()%k;
 		jogada[0].p1 = lances[i].p1;
 		jogada[0].p2 = lances[i].p2;
 		jogada[0].peca = lances[i].peca;
 		return;
 		}
+		//caso contrario, escolhe-se um lance aleatorio dentre aqueles que nao levam a uma derrota imediata
 		i= rand()%k2;
 		jogada[0].p1 = lancesBons[i].p1;
 		jogada[0].p2 = lancesBons[i].p2;
@@ -718,12 +723,13 @@ void lancepc(char tab[3][3], int jogo, lanceC jogada[1]){
 	}
 }
 
-//faz as jogadas do computador
+//faz as jogadas do computador e printa na tela a jogada feita
 void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 	if(jogo == 1){
         //se estiver na fase de posicionamentos com primeira jogada coloca o Bispo branco na casa do meio do tabuleiro
 		if(i == 0){
 			tab[1][1] = 'B';
+			printf("%d %d %c\n", 2, 2, 'B');
             return;
 		}
         //na fase de posicionamentos se for a segunda jogada do computador ele verifica se tem alguma peca nos cantos, se tiver ele verifica qual a melhor jogada
@@ -733,23 +739,29 @@ void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 			if((tab[0][0] != '_' || tab[0][2] != '_' || tab[2][0] != '_' || tab[2][2] != '_')){
                 lancepc(tab, jogo, jogada);
                 tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
-                jogada[0].p1 = -1;
+				printf("%d %d %c\n", jogada[0].p1+1, jogada[0].p2+1, jogada[0].peca);
+                jogada[0].p1 = -1;// essa variavel eh usada como flag para checar depois se o computador joga pela lancepc ou pelo algoritmo pronto
                 return;
 		    }
+			//caso o oponente nao tenha colocado uma peca no canto, coloca-se um cavalo em um canto do lado da peca do oponente
 			if(tab[0][1] != '_'){
 				tab[0][0] = 'C';
+				printf("%d %d %c\n", 1, 1, 'C');
 				return;
 			}
 			if(tab[1][0] != '_'){
 				tab[0][0] = 'C';
+				printf("%d %d %c\n", 1, 1, 'C');
 				return;
 			}
 			if(tab[1][2] !='_'){
 				tab[2][2] = 'C';
+				printf("%d %d %c\n", 3, 3, 'C');
 				return;
 			}
 			if(tab[2][1] != '_'){
 				tab[2][2] = 'C';
+				printf("%d %d %c\n", 3, 3, 'C');
 				return;
 			}
 		}
@@ -758,43 +770,53 @@ void pcjoga(int i, char tab[3][3], int jogo, lanceC jogada[1]){
 			if(jogada[0].p1==-1){
 				lancepc(tab, jogo, jogada);
 				tab[jogada[0].p1][jogada[0].p2] = jogada[0].peca;
+				printf("%d %d %c\n", jogada[0].p1+1, jogada[0].p2+1, jogada[0].peca);
 				jogada[0].p1 = -1;
 				return;
 			}
 			if(tab[0][0] == 'C' && tab[2][2] == '_' && checar('T', tab)==0){
 				tab[2][2] = 'T';
+				printf("%d %d %c\n", 3, 3, 'T');
 				return;
 			}else{
 				if(tab[0][1] == '_' && checar('T', tab)==0 && tab[0][0] == 'C'){
 					tab[0][1] = 'T';
+					printf("%d %d %c\n", 1, 2, 'T');
 					return;
 				}else{
 					if(checar('T', tab)==0 && tab[0][0] == 'C'){
 						tab[1][0] = 'T';
+						printf("%d %d %c\n", 2, 1, 'T');
 						return;
 					}
 				}
 			}
 			if(tab[2][2] == 'C' && tab[0][0] == '_' && checar('T', tab)==0){
 				tab[0][0] = 'T';
+				printf("%d %d %c\n", 1, 1, 'T');
 				return;
 			}else{
 	
 				if(tab[2][1] == '_' && checar('T', tab)==0 && tab[2][2] == 'C'){
 					tab[2][1] = 'T';
+					printf("%d %d %c\n", 3, 2, 'T');
 					return;
 				}else{
 					if(checar('T', tab)==0 && tab[2][2] == 'C'){
 						tab[1][2] = 'T';
+						printf("%d %d %c\n", 2, 3, 'T');
 						return;
 					}
 				}
 			}
+			//ao fim da execucao do trecho acima, tera sido criada uma ameaca dupla de vitoria do j1, e o j2 nao consegue impedir as duas ao mesmo tempo
+			//assim, na fase dois de jogo, a lancepc encontrara o lance que vence e ira joga-lo
 		}
 	}else{
         //na fase de mover pecas eh feita a verificacao das melhores jogadas possiveis na funcao lancepc e depois eh feito o lance com a jogada obtida
 		lancepc(tab, jogo, jogada);
 		lance(jogada[0].p1+1, jogada[0].p2+1, jogada[0].peca, tab);
+		printf("%d %d %c\n", jogada[0].p1+1, jogada[0].p2+1, jogada[0].peca);
 	}
 	return;
 }
@@ -814,8 +836,8 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 					//le o lance de posicionamento do jogador 1
 					scanf(" %c  %c  %c", &p1, &p2, &peca);
 					
-					
-					if(p1 == 'B' || p1 == 'C' || p1 == 'T'){
+					//verifica se a p1 eh uma das posicoes permitidas, caso nao seja, supoe-se que o jogador digitou uma peca seguida da posicao (p1 e p2) e entao a peca que esta em p1 vai para a variavel peca, enquanto p1 recebe a posicao que esta em p2 e p2 recebe a posicao que esta em peca
+					if(p1 != '1' && p1 != '2' && p1 != '3'){
 						intermediario = peca;
 						peca = p1;
 						p1 = p2;
@@ -823,9 +845,11 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 						p2 = intermediario;
 						p2 = p2 - '0';
 					}else{
+						//caso seja uma das posicoes permitidas entao as posicoes p1 e p2 que eram char sao transformadas em inteiros
 						p1 = p1 - '0';
 						p2 = p2 - '0';
 					}
+					//mostra as mensagens de erro quando necessario
 					erros(vez, p1, p2, peca, tab, jogo);
 				/*nesse while eh checado se: 
 				a casa digitada nao existe, ou seja, se esta fora da faixa de 1 a 3 (que depois eh convertida para 0 a 2 para trabalhar com as matrizes);
@@ -843,7 +867,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 				do{
 					scanf(" %c  %c  %c", &p1, &p2, &peca);
 						
-					if(p1 == 'b' || p1 == 'c' || p1 == 't'){
+					if(p1 != '1' && p1 != '2' && p1 != '3'){
 						intermediario = peca;
 						peca = p1;
 						p1 = p2;
@@ -863,12 +887,12 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 		else{
 			if(vez == 1){
 				
-				//nesse do while acontece o mesmo que no do wile do primeiro momento do jogo,
+				//nesse do do-while acontece o mesmo que no do do-while do primeiro momento do jogo,
 				//exceto que eh usada a funcao checarlance ao inves da checar
 				do{
 					scanf(" %c  %c  %c", &p1, &p2, &peca);
 						
-					if(p1 == 'B' || p1 == 'C' || p1 == 'T'){
+					if(p1 != '1' && p1 != '2' && p1 != '3'){
 						intermediario = peca;
 						peca = p1;
 						p1 = p2;
@@ -889,7 +913,7 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 				do{
 					scanf(" %c  %c  %c", &p1, &p2, &peca);
 								
-					if(p1 == 'b' || p1 == 'c' || p1 == 't'){
+					if(p1 != '1' && p1 != '2' && p1 != '3'){
 						intermediario = peca;
 						peca = p1;
 						p1 = p2;
@@ -907,55 +931,56 @@ void leitura(int i, char tab[3][3], int jogo, int vez, int mododejogo, lanceC jo
 			}
 		}
 	}else{
-		if(mododejogo == 2){
-			if(jogo == 1){
-				if(vez == 1){
-					pcjoga(i, tab, jogo, jogada);
-					printTab(tab);
-				}else{
-					do{
-						scanf(" %c  %c  %c", &p1, &p2, &peca);
-							
-						if(p1 == 'b' || p1 == 'c' || p1 == 't'){
-							intermediario = peca;
-							peca = p1;
-							p1 = p2;
-							p1 = p1 - '0';
-							p2 = intermediario;
-							p2 = p2 - '0';
-						}else{
-							p1 = p1 - '0';
-							p2 = p2 - '0';
-						}
-						erros(vez, p1, p2, peca, tab, jogo);
-					}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checar(peca, tab) != 0));
-					tab[p1-1][p2-1] = peca;
-					printTab(tab);
-				}
+		//se estiver no modo de jogo 2, computador vs jogador, entao esse trecho eh executado
+		//quase tudo eh analogo ao do modo de jogo 1
+		if(jogo == 1){
+			if(vez == 1){
+				//chamada da funcao que faz a jogada do computador
+				pcjoga(i, tab, jogo, jogada);
+				printTab(tab);
 			}else{
-				if(vez == 1){
-					pcjoga(i, tab, jogo, jogada);
-					printTab(tab);
-				}else{
-					do{
-						scanf(" %c  %c  %c", &p1, &p2, &peca);
-									
-						if(p1 == 'b' || p1 == 'c' || p1 == 't'){
-							intermediario = peca;
-							peca = p1;
-							p1 = p2;
-							p1 = p1 - '0';
-							p2 = intermediario;
-							p2 = p2 - '0';
-						}else{
-							p1 = p1 - '0';
-							p2 = p2 - '0';
-						}
-						erros(vez, p1, p2, peca, tab, jogo);
-					}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checarlance(p1, p2, peca, tab) != 0));
-					lance(p1, p2, peca, tab);
-					printTab(tab);	
-				}
+				do{
+					scanf(" %c  %c  %c", &p1, &p2, &peca);
+						
+					if(p1 != '1' && p1 != '2' && p1 != '3'){
+						intermediario = peca;
+						peca = p1;
+						p1 = p2;
+						p1 = p1 - '0';
+						p2 = intermediario;
+						p2 = p2 - '0';
+					}else{
+						p1 = p1 - '0';
+						p2 = p2 - '0';
+					}
+					erros(vez, p1, p2, peca, tab, jogo);
+				}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checar(peca, tab) != 0));
+				tab[p1-1][p2-1] = peca;
+				printTab(tab);
+			}
+		}else{
+			if(vez == 1){
+				pcjoga(i, tab, jogo, jogada);
+				printTab(tab);
+			}else{
+				do{
+					scanf(" %c  %c  %c", &p1, &p2, &peca);
+								
+					if(p1 != '1' && p1 != '2' && p1 != '3'){
+						intermediario = peca;
+						peca = p1;
+						p1 = p2;
+						p1 = p1 - '0';
+						p2 = intermediario;
+						p2 = p2 - '0';
+					}else{
+						p1 = p1 - '0';
+						p2 = p2 - '0';
+					}
+					erros(vez, p1, p2, peca, tab, jogo);
+				}while((p1!=1 && p1!=2 && p1!=3) || (p2!=1 && p2!=2 && p2!=3) || (peca != 'b' && peca != 'c' && peca != 't') || (tab[p1-1][p2-1] != '_') || (checarlance(p1, p2, peca, tab) != 0));
+				lance(p1, p2, peca, tab);
+				printTab(tab);	
 			}
 		}
 	}
@@ -970,14 +995,18 @@ int main(void){
 	int vez = 0; //indica de quem eh a vez de jogar, se vez = 1 entao eh a vez do jogador 1, se v = 2 eh a vez do jogador 2
 	int jogo = 0; //indica qual fase do jogo esta acontecendo, se for a fase de posicionamento entao jogo = 1, se for a fase de movimentacao de pecas entao jogo = 2
     int mododejogo;//se o mododejogo for 1, então eh jogador VS jogador, se for 2 eh computador VS jogador
-	lanceC jogada[1];
+	lanceC jogada[1]; //vetor que serve para realizar as jogadas do computador
 	
 	info();
     printf("Menu:\n");
-    printf("(1) Jogador VS Jogador\n");
-    printf("(2) Computador VS Jogador\n");
-    printf("Selecione o tipo de jogo: ");
-    scanf("%d", &mododejogo);
+	do{
+		printf("(1) Jogador VS Jogador\n");
+		printf("(2) Computador VS Jogador\n");
+		printf("Selecione o tipo de jogo (Digite 1 ou 2): ");
+		//lendo o modo de jogo desejado pelo jogador
+		scanf("%d", &mododejogo);
+		//prende o usuario para que ele nao digite nada diferente de 1 ou 2
+	}while((mododejogo != 1)&&(mododejogo != 2));
 	printf("\n");
 	if(mododejogo == 1){
 		printf("Jogador VS Jogador\n");
@@ -1161,9 +1190,9 @@ int main(void){
 				}
 			}
 			//caso tenha um empate por falta de lance ou uma vitoria, i != 31
-			//entao o empate de s de mais so acontece se o for anterior acabar no i=31
+			//entao o empate de lances de mais so acontece se o for anterior acabar no i=31
 			if(i == 60){
-				printf("EMPATE: Ocorreram mais de 30 s e nao houve vitorias");
+				printf("EMPATE: Ocorreram mais de 30 lances e nao houve vitorias");
 			}
 		}
     }
